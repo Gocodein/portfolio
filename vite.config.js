@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     watch: {
-      ignored: ['**/*.mp4', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp', '**/*.mp3', '**/*.wav', '**/node_modules/**', '!**/src/**', '!**/public/**'],
+      ignored: ['**/*.mp4', '**/*.mp3', '**/*.wav', '**/*.pdf', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp', '**/node_modules/**'],
     },
   },
 })

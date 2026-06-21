@@ -4,6 +4,7 @@ import {
   Moon, Sun, GitBranch, Phone, MapPin,
   ChevronDown, ChevronRight, Copy, Check, ExternalLink,
   Award, Calendar, Terminal, Database, Cpu, ChevronLeft,
+  Menu, X, Eye, Download,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────
@@ -287,11 +288,25 @@ function Overview({ t }) {
                 backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
               }}><Icon size={13} />{label}</a>
             ))}
+            <a href="/resume.pdf" target="_blank" rel="noopener" className="link-hover" style={{
+              display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
+              background: t.surface, border: `1px solid ${t.border}`, borderRadius: 10,
+              color: t.textSub, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
+              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+            }}><Eye size={13} />View Resume</a>
+            <a href="/resume.pdf" download="Sagar_Shaw_Resume.pdf" className="link-hover" style={{
+              display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
+              background: `linear-gradient(135deg, ${t.accent}18, ${t.accentSub}12)`,
+              border: `1px solid ${t.accent}33`, borderRadius: 10,
+              color: t.accent, fontSize: 12, fontWeight: 600,
+              fontFamily: "'JetBrains Mono', monospace",
+              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+            }}><Download size={13} />Download PDF</a>
           </div>
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12, marginBottom: 18 }}>
         {stats.map((s, i) => (
           <GlassCard key={s.label} t={t} style={{ padding: "18px 16px" }}>
             <div style={{
@@ -761,6 +776,8 @@ export default function App() {
   const [showHint, setShowHint] = useState(true);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const touchRef = useRef({ startX: 0, startY: 0, dragging: false });
   const mainRef = useRef(null);
 
@@ -770,6 +787,17 @@ export default function App() {
     const handler = e => setTheme(e.matches ? "midnight" : "matinee");
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  // Responsive breakpoint
+  useEffect(() => {
+    const onResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (!mobile) setSidebarOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   // Hide swipe hint after 5 seconds
@@ -958,6 +986,18 @@ export default function App() {
 
         .drag-active { cursor:grabbing !important; user-select:none !important; }
         .drag-active * { cursor:grabbing !important; user-select:none !important; }
+
+        .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:99; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
+
+        @media (max-width:767px) {
+          .mobile-header { display:flex !important; }
+          .desktop-sidebar { transform:translateX(-100%); transition:transform 0.3s cubic-bezier(.4,0,.2,1); }
+          .desktop-sidebar.open { transform:translateX(0); }
+        }
+        @media (min-width:768px) {
+          .mobile-header { display:none !important; }
+          .desktop-sidebar { transform:translateX(0) !important; }
+        }
       `}</style>
 
       {/* ── BACKGROUND ORBS ── */}
@@ -988,44 +1028,87 @@ export default function App() {
         }} />
       </div>
 
+      {/* ── MOBILE HEADER ── */}
+      <div className="mobile-header" style={{
+        display: "none", position: "fixed", top: 0, left: 0, right: 0, zIndex: 110,
+        height: 56, alignItems: "center", justifyContent: "space-between",
+        padding: "0 16px",
+        background: t.sidebar, borderBottom: `1px solid ${t.border}`,
+        backdropFilter: "blur(28px) saturate(1.5)", WebkitBackdropFilter: "blur(28px) saturate(1.5)",
+        boxShadow: `0 2px 16px rgba(0,0,0,0.1)`,
+      }}>
+        <button onClick={() => setSidebarOpen(o => !o)} style={{
+          width: 36, height: 36, borderRadius: 10, border: `1px solid ${t.border}`,
+          background: t.card, color: t.text, cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+        }}>
+          {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 7, padding: 1.5, overflow: "hidden",
+            background: `linear-gradient(135deg, ${t.accent}, ${t.gold})`,
+          }}>
+            <img src="/profile.png" alt="SS" style={{ width: "100%", height: "100%", borderRadius: 5.5, objectFit: "cover", objectPosition: "center 20%", display: "block" }} />
+          </div>
+          <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", color: t.text }}>Sagar Shaw</span>
+        </div>
+        <button onClick={() => setTheme(th => th === "midnight" ? "matinee" : "midnight")} style={{
+          width: 36, height: 36, borderRadius: 10, border: `1px solid ${t.border}`,
+          background: t.card, color: t.textMuted, cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+        }}>
+          {theme === "midnight" ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
+      </div>
+
+      {/* ── SIDEBAR OVERLAY (mobile) ── */}
+      {isMobile && sidebarOpen && (
+        <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
+      )}
+
       {/* ── SIDEBAR ── */}
-      <aside style={{
-        width: 222, flexShrink: 0, background: t.sidebar,
+      <aside className={`desktop-sidebar ${sidebarOpen ? "open" : ""}`} style={{
+        width: isMobile ? 260 : 222, flexShrink: 0, background: t.sidebar,
         borderRight: `1px solid ${t.border}`,
         backdropFilter: "blur(28px) saturate(1.5)",
         WebkitBackdropFilter: "blur(28px) saturate(1.5)",
         display: "flex", flexDirection: "column",
-        position: "fixed", top: 0, left: 0, bottom: 0, zIndex: 100,
-        boxShadow: `inset -1px 0 0 ${t.glassHighlight}, 4px 0 24px rgba(0,0,0,0.1)`,
+        position: "fixed", top: isMobile ? 56 : 0, left: 0, bottom: 0, zIndex: 100,
+        boxShadow: `inset -1px 0 0 ${t.glassHighlight}, 4px 0 24px rgba(0,0,0,0.15)`,
       }}>
-        {/* Profile */}
-        <div style={{ padding: "22px 17px 17px", borderBottom: `1px solid ${t.border}` }}>
-          <div style={{
-            width: 42, height: 42, borderRadius: 10, marginBottom: 11,
-            padding: 2,
-            background: `linear-gradient(135deg, ${t.accent}, ${t.gold})`,
-            boxShadow: `0 0 12px ${t.accent}22`,
-            overflow: "hidden",
-          }}>
-            <img
-              src="/profile.png"
-              alt="Sagar Shaw"
-              style={{
-                width: "100%", height: "100%", borderRadius: 8,
-                objectFit: "cover", objectPosition: "center 20%", display: "block",
-              }}
-            />
+        {/* Profile (desktop only) */}
+        {!isMobile && (
+          <div style={{ padding: "22px 17px 17px", borderBottom: `1px solid ${t.border}` }}>
+            <div style={{
+              width: 42, height: 42, borderRadius: 10, marginBottom: 11,
+              padding: 2,
+              background: `linear-gradient(135deg, ${t.accent}, ${t.gold})`,
+              boxShadow: `0 0 12px ${t.accent}22`,
+              overflow: "hidden",
+            }}>
+              <img
+                src="/profile.png"
+                alt="Sagar Shaw"
+                style={{
+                  width: "100%", height: "100%", borderRadius: 8,
+                  objectFit: "cover", objectPosition: "center 20%", display: "block",
+                }}
+              />
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Inter', sans-serif" }}>Sagar Shaw</div>
+            <div style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>AI/ML Engineer</div>
           </div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Inter', sans-serif" }}>Sagar Shaw</div>
-          <div style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>AI/ML Engineer</div>
-        </div>
+        )}
 
         {/* Nav */}
         <nav style={{ flex: 1, padding: "12px 8px", overflowY: "auto" }}>
           {NAV.map(({ id, label, Icon }) => {
             const active = section === id;
             return (
-              <button key={id} onClick={() => navigate(id)} className={`nav-item ${active ? "nav-active" : ""}`} style={{
+              <button key={id} onClick={() => { navigate(id); if (isMobile) setSidebarOpen(false); }} className={`nav-item ${active ? "nav-active" : ""}`} style={{
                 width: "100%", display: "flex", alignItems: "center", gap: 9,
                 padding: "10px 12px", borderRadius: 9, border: "none",
                 background: active ? t.navActive : "transparent",
@@ -1045,17 +1128,19 @@ export default function App() {
             <span className="pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
             Available for hire
           </div>
-          <button onClick={() => setTheme(th => th === "midnight" ? "matinee" : "midnight")} style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-            width: "100%", padding: "8px 0", borderRadius: 8,
-            background: t.card, border: `1px solid ${t.border}`,
-            color: t.textMuted, fontSize: 11, cursor: "pointer",
-            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-            transition: "all .25s",
-          }}>
-            {theme === "midnight" ? <Sun size={12} /> : <Moon size={12} />}
-            {theme === "midnight" ? "Switch to Meadow" : "Switch to Forest"}
-          </button>
+          {!isMobile && (
+            <button onClick={() => setTheme(th => th === "midnight" ? "matinee" : "midnight")} style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              width: "100%", padding: "8px 0", borderRadius: 8,
+              background: t.card, border: `1px solid ${t.border}`,
+              color: t.textMuted, fontSize: 11, cursor: "pointer",
+              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+              transition: "all .25s",
+            }}>
+              {theme === "midnight" ? <Sun size={12} /> : <Moon size={12} />}
+              {theme === "midnight" ? "Switch to Meadow" : "Switch to Forest"}
+            </button>
+          )}
         </div>
       </aside>
 
@@ -1064,7 +1149,9 @@ export default function App() {
         ref={mainRef}
         className={isDragging ? "drag-active" : ""}
         style={{
-          flex: 1, marginLeft: 222, padding: "36px 42px 80px",
+          flex: 1, marginLeft: isMobile ? 0 : 222,
+          paddingTop: isMobile ? 72 : 36,
+          padding: isMobile ? "72px 16px 90px" : "36px 42px 80px",
           overflowY: "auto", minHeight: "100vh", position: "relative", zIndex: 1,
           cursor: isDragging ? "grabbing" : "default",
         }}
@@ -1084,7 +1171,7 @@ export default function App() {
         </div>
 
         {/* Navigation arrows */}
-        <div style={{ position: "fixed", bottom: 28, right: 36, display: "flex", gap: 8, zIndex: 200 }}>
+        <div style={{ position: "fixed", bottom: isMobile ? 20 : 28, right: isMobile ? 16 : 36, display: "flex", gap: 8, zIndex: 200 }}>
           <button className="nav-arrow" onClick={goPrev} disabled={curIdx === 0} style={{
             width: 36, height: 36, borderRadius: 10, border: `1px solid ${t.border}`,
             background: t.card, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
@@ -1101,7 +1188,9 @@ export default function App() {
 
         {/* Progress dots */}
         <div style={{
-          position: "fixed", bottom: 28, left: "calc(222px + 50%)", transform: "translateX(-50%)",
+          position: "fixed", bottom: isMobile ? 20 : 28,
+          left: isMobile ? "50%" : "calc(222px + 50%)",
+          transform: "translateX(-50%)",
           display: "flex", gap: 6, alignItems: "center", zIndex: 200,
           padding: "6px 14px", borderRadius: 20,
           background: t.sidebar, border: `1px solid ${t.border}`,
@@ -1126,7 +1215,9 @@ export default function App() {
         {/* Swipe hint */}
         {showHint && (
           <div className="swipe-hint" style={{
-            position: "fixed", bottom: 56, left: "calc(222px + 50%)", transform: "translateX(-50%)",
+            position: "fixed", bottom: isMobile ? 48 : 56,
+            left: isMobile ? "50%" : "calc(222px + 50%)",
+            transform: "translateX(-50%)",
             fontSize: 11, color: t.textMuted, fontFamily: "'JetBrains Mono', monospace",
             letterSpacing: 1, whiteSpace: "nowrap", zIndex: 200,
           }}>
