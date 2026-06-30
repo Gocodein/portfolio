@@ -8,6 +8,201 @@ import {
 } from "lucide-react";
 
 // ─────────────────────────────────────────────
+// VISUAL COMPONENTS
+// ─────────────────────────────────────────────
+
+/* ParticleCanvas ─ full-viewport floating particles with faint connection lines */
+function ParticleCanvas({ t }) {
+  const canvasRef = useRef(null);
+  const particlesRef = useRef([]);
+  const animRef = useRef(null);
+
+  const initParticles = useCallback((w, h) => {
+    const pts = [];
+    for (let i = 0; i < 40; i++) {
+      pts.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: 1.5 + Math.random(),
+        vx: (Math.random() - 0.5) * 0.5 + (Math.random() > 0.5 ? 0.2 : -0.2),
+        vy: (Math.random() - 0.5) * 0.5 + (Math.random() > 0.5 ? 0.2 : -0.2),
+      });
+    }
+    particlesRef.current = pts;
+  }, []);
+
+  useEffect(() => {
+    const cvs = canvasRef.current;
+    if (!cvs) return;
+    const ctx = cvs.getContext("2d");
+    let w = (cvs.width = window.innerWidth);
+    let h = (cvs.height = window.innerHeight);
+    initParticles(w, h);
+
+    const onResize = () => {
+      w = cvs.width = window.innerWidth;
+      h = cvs.height = window.innerHeight;
+    };
+    window.addEventListener("resize", onResize);
+
+    const draw = () => {
+      ctx.clearRect(0, 0, w, h);
+      const pts = particlesRef.current;
+      // connections
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = t.accent + "14"; // ~8% opacity hex
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      // particles
+      for (const p of pts) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = t.accent + "4D"; // ~30% opacity hex
+        ctx.fill();
+      }
+      animRef.current = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [t, initParticles]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
+    />
+  );
+}
+
+/* CustomCursor ─ circle-follower cursor for desktop */
+function CustomCursor({ t }) {
+  const outerRef = useRef(null);
+  const innerRef = useRef(null);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const checkWidth = () => setVisible(window.innerWidth >= 768);
+    checkWidth();
+    window.addEventListener("resize", checkWidth);
+    return () => window.removeEventListener("resize", checkWidth);
+  }, []);
+
+  useEffect(() => {
+    if (!visible) return;
+    let hovering = false;
+
+    const onMove = (e) => {
+      const { clientX: x, clientY: y } = e;
+      if (innerRef.current) {
+        innerRef.current.style.left = x + "px";
+        innerRef.current.style.top = y + "px";
+      }
+      if (outerRef.current) {
+        outerRef.current.style.left = x + "px";
+        outerRef.current.style.top = y + "px";
+      }
+    };
+
+    const onOver = (e) => {
+      if (e.target.closest("button, a, input, textarea, select")) {
+        if (!hovering && outerRef.current) {
+          hovering = true;
+          outerRef.current.style.transform = "translate(-50%,-50%) scale(1.5)";
+          outerRef.current.style.borderColor = t.accent + "99"; // 60%
+        }
+      }
+    };
+    const onOut = (e) => {
+      if (hovering && !e.target.closest("button, a, input, textarea, select")) {
+        hovering = false;
+        if (outerRef.current) {
+          outerRef.current.style.transform = "translate(-50%,-50%) scale(1)";
+          outerRef.current.style.borderColor = t.accent + "66"; // 40%
+        }
+      }
+    };
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseover", onOver);
+    document.addEventListener("mouseout", onOut);
+    return () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseover", onOver);
+      document.removeEventListener("mouseout", onOut);
+    };
+  }, [t, visible]);
+
+  if (!visible) return null;
+
+  const shared = { position: "fixed", zIndex: 9999, pointerEvents: "none", borderRadius: "50%", top: 0, left: 0 };
+
+  return (
+    <>
+      <div
+        ref={outerRef}
+        style={{
+          ...shared,
+          width: 32,
+          height: 32,
+          border: `1.5px solid ${t.accent}66`,
+          transform: "translate(-50%,-50%) scale(1)",
+          transition: "left 0.08s ease, top 0.08s ease, transform 0.15s ease, border-color 0.15s ease",
+        }}
+      />
+      <div
+        ref={innerRef}
+        style={{
+          ...shared,
+          width: 5,
+          height: 5,
+          backgroundColor: t.accent + "B3", // 70%
+          transform: "translate(-50%,-50%)",
+        }}
+      />
+    </>
+  );
+}
+
+/* RevealOnMount ─ staggered fade-in-up wrapper */
+function RevealOnMount({ delay = 0, children }) {
+  const [vis, setVis] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => setVis(true), delay);
+    return () => clearTimeout(id);
+  }, [delay]);
+  return (
+    <div
+      style={{
+        opacity: vis ? 1 : 0,
+        transform: vis ? "none" : "translateY(20px)",
+        transition: "opacity 0.6s ease, transform 0.6s ease",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
 // CUSTOM SVG ICONS (brand icons removed from lucide)
 // ─────────────────────────────────────────────
 function LinkedinIcon({ size = 24, color = "currentColor", ...props }) {
@@ -114,6 +309,9 @@ const PROJECTS_DATA = [
       "Data cleaning & pattern detection pipeline for continuous model retraining",
       "IoT device integration across Arduino Mega, Raspberry Pi 4, and Pi Camera",
     ],
+    category: ['ML-DL', 'Hardware', 'IoT'],
+    github: 'https://github.com/Gocodein/Arachnid',
+    demo: null,
   },
   {
     title: "IntelliEat Monitoring System",
@@ -126,6 +324,24 @@ const PROJECTS_DATA = [
       "AI algorithms detecting behavioral patterns associated with anorexia and bulimia",
       "Real-time analytics dashboard for health practitioners and caregivers",
     ],
+    category: ['ML-DL', 'IoT', 'Web-App'],
+    github: 'https://github.com/Gocodein/IntelliEat',
+    demo: null,
+  },
+  {
+    title: 'AI Portfolio — Interactive Glass UI',
+    badge: 'Live', badgeColor: '#22c55e',
+    role: 'Full-Stack Developer', period: '2025 — Present',
+    description: 'A modern glass-morphism portfolio built with React, featuring particle animations, 3D tilt cards, swipe navigation, and dual themes.',
+    techStack: ['React', 'Vite', 'CSS Glass', 'Lucide Icons', 'Vercel'],
+    features: [
+      'Frosted glass UI with dual Forest/Meadow themes and animated particle background',
+      'Swipe, drag, and keyboard navigation between sections with slide animations',
+      'Fully responsive with mobile hamburger menu and touch gestures',
+    ],
+    category: ['Web-App'],
+    github: 'https://github.com/Gocodein/portfolio',
+    demo: 'https://portfolio-lac-eta-23.vercel.app/',
   },
 ];
 
@@ -207,14 +423,21 @@ function Tag({ label, t }) {
   );
 }
 
-function PageTitle({ children, t }) {
+function PageTitle({ children, t, num }) {
   return (
-    <h1 style={{
-      fontSize: "1.85rem", fontWeight: 800, color: t.accent,
-      borderLeft: `3px solid ${t.gold}`, paddingLeft: 14, marginBottom: 28,
-      lineHeight: 1.15, fontFamily: "'Inter', sans-serif",
-      letterSpacing: "-0.02em",
-    }}>{children}</h1>
+    <div style={{ marginBottom: 28 }}>
+      {num && (
+        <div style={{ fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: t.gold, letterSpacing: 2, marginBottom: 6, fontWeight: 600 }}>
+          {num}.
+        </div>
+      )}
+      <h1 style={{
+        fontSize: "1.85rem", fontWeight: 800, color: t.accent,
+        borderLeft: `3px solid ${t.gold}`, paddingLeft: 14, margin: 0,
+        lineHeight: 1.15, fontFamily: "'Outfit', sans-serif",
+        letterSpacing: "-0.02em",
+      }}>{children}</h1>
+    </div>
   );
 }
 
@@ -244,89 +467,153 @@ function Overview({ t }) {
     { val: "3", label: "NPTEL Certificates", sub: "Verified & scored" },
     { val: "2", label: "Internships", sub: "AI/ML focused" },
   ];
+  const cardRef = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 14;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -14;
+    setTilt({ x, y });
+  };
+  const resetTilt = () => setTilt({ x: 0, y: 0 });
+
   return (
     <div>
-      <div style={{ display: "flex", gap: 28, alignItems: "center", flexWrap: "wrap", marginBottom: 28 }}>
-        <div className="avatar-glow" style={{
-          width: 110, height: 110, borderRadius: "50%", flexShrink: 0,
-          padding: 3,
-          background: `linear-gradient(135deg, ${t.accent}, ${t.gold})`,
-          boxShadow: `0 0 0 4px ${t.bg}, 0 0 24px ${t.accent}28`,
-        }}>
-          <img
-            src="/profile.png"
-            alt="Sagar Shaw"
+      <RevealOnMount delay={0}>
+        <div style={{ display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap", marginBottom: 28 }}>
+          {/* 3D Tilt Photo Card */}
+          <div
+            ref={cardRef}
+            onMouseMove={handleMouse}
+            onMouseLeave={resetTilt}
             style={{
-              width: "100%", height: "100%", borderRadius: "50%",
-              objectFit: "cover", objectPosition: "center 20%", display: "block",
+              perspective: 600, flexShrink: 0,
             }}
-          />
-        </div>
-        <div style={{ flex: 1, minWidth: 220 }}>
-          <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.gold, letterSpacing: 3, textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>
-            AI/ML Engineer · CSE(AIML) Student · Indian Citizen
+          >
+            <div style={{
+              width: 240, borderRadius: 22, overflow: "hidden",
+              transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
+              transition: "transform 0.15s ease-out",
+              background: `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
+              border: `1px solid ${t.border}`,
+              borderTop: `1px solid ${t.glassHighlight}`,
+              backdropFilter: "blur(24px) saturate(1.5)",
+              WebkitBackdropFilter: "blur(24px) saturate(1.5)",
+              boxShadow: `0 20px 60px rgba(0,0,0,0.25), inset 0 1px 0 ${t.glassHighlight}, 0 0 50px ${t.accent}18`,
+              position: "relative",
+            }}>
+              {/* Shine effect */}
+              <div style={{
+                position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
+                background: `linear-gradient(${105 + tilt.x * 3}deg, transparent 30%, ${t.glassHighlight} 50%, transparent 70%)`,
+                opacity: 0.5,
+              }} />
+              <img
+                src="/profile.png"
+                alt="Sagar Shaw"
+                style={{ width: "100%", height: 270, objectFit: "cover", objectPosition: "center 20%", display: "block" }}
+              />
+              <div style={{ padding: "14px 16px 16px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 12 }}>
+                  {["AI/ML", "Computer Vision", "IoT", "GenAI", "Deep Learning"].map(tag => (
+                    <span key={tag} style={{
+                      fontSize: 9, padding: "3px 9px", borderRadius: 999,
+                      background: t.badge, color: t.accentSub, border: `1px solid ${t.border}`,
+                      fontFamily: "'JetBrains Mono', monospace", fontWeight: 500,
+                    }}>{tag}</span>
+                  ))}
+                </div>
+                <div style={{
+                  display: "flex", justifyContent: "space-around",
+                  padding: "10px 0 4px", borderTop: `1px solid ${t.border}`,
+                }}>
+                  {[
+                    { v: "3+", l: "Projects" },
+                    { v: "2", l: "Interns" },
+                    { v: "1", l: "Patent" },
+                  ].map(s => (
+                    <div key={s.l} style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 18, fontWeight: 900, color: t.accent, fontFamily: "'Outfit', sans-serif" }}>{s.v}</div>
+                      <div style={{ fontSize: 9, color: t.textMuted, fontFamily: "'JetBrains Mono', monospace", letterSpacing: 0.5 }}>{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          <h1 style={{
-            fontSize: "2.5rem", fontWeight: 900, margin: "0 0 10px", lineHeight: 1.1,
-            backgroundImage: `linear-gradient(135deg, ${t.text}, ${t.accentSub})`,
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            fontFamily: "'Inter', sans-serif", letterSpacing: "-0.03em",
-          }}>Sagar Shaw</h1>
-          <p style={{ color: t.textSub, fontSize: 14, maxWidth: 500, lineHeight: 1.8, margin: "0 0 16px", fontFamily: "'Inter', sans-serif" }}>
-            Building intelligent systems at the intersection of computer vision, generative AI and IoT — from a patented wildlife conservation robot to AI-driven health monitoring.
-          </p>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {[
-              { href: "https://www.linkedin.com/in/sagar-shaw-79701138a", label: "LinkedIn", Icon: LinkedinIcon },
-              { href: "https://github.com/Gocodein", label: "GitHub", Icon: GitBranch },
-            ].map(({ href, label, Icon }) => (
-              <a key={label} href={href} target="_blank" rel="noopener" className="link-hover" style={{
+
+          <div style={{ flex: 1, minWidth: 220 }}>
+            <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.gold, letterSpacing: 3, textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>
+              AI/ML Engineer · CSE(AIML) Student · Indian Citizen
+            </div>
+            <h1 style={{
+              fontSize: "2.5rem", fontWeight: 900, margin: "0 0 10px", lineHeight: 1.1,
+              backgroundImage: `linear-gradient(135deg, ${t.text}, ${t.accentSub})`,
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.03em",
+            }}>Sagar Shaw</h1>
+            <p style={{ color: t.textSub, fontSize: 14, maxWidth: 500, lineHeight: 1.8, margin: "0 0 16px", fontFamily: "'Outfit', sans-serif" }}>
+              Building intelligent systems at the intersection of computer vision, generative AI and IoT — from a patented wildlife conservation robot to AI-driven health monitoring.
+            </p>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {[
+                { href: "https://www.linkedin.com/in/sagar-shaw-79701138a", label: "LinkedIn", Icon: LinkedinIcon },
+                { href: "https://github.com/Gocodein", label: "GitHub", Icon: GitBranch },
+              ].map(({ href, label, Icon }) => (
+                <a key={label} href={href} target="_blank" rel="noopener" className="link-hover" style={{
+                  display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
+                  background: t.surface, border: `1px solid ${t.border}`, borderRadius: 10,
+                  color: t.textSub, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
+                  backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+                }}><Icon size={13} />{label}</a>
+              ))}
+              <a href="/resume.pdf" target="_blank" rel="noopener" className="link-hover" style={{
                 display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
                 background: t.surface, border: `1px solid ${t.border}`, borderRadius: 10,
                 color: t.textSub, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
                 backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-              }}><Icon size={13} />{label}</a>
-            ))}
-            <a href="/resume.pdf" target="_blank" rel="noopener" className="link-hover" style={{
-              display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
-              background: t.surface, border: `1px solid ${t.border}`, borderRadius: 10,
-              color: t.textSub, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
-              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-            }}><Eye size={13} />View Resume</a>
-            <a href="/resume.pdf" download="Sagar_Shaw_Resume.pdf" className="link-hover" style={{
-              display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
-              background: `linear-gradient(135deg, ${t.accent}18, ${t.accentSub}12)`,
-              border: `1px solid ${t.accent}33`, borderRadius: 10,
-              color: t.accent, fontSize: 12, fontWeight: 600,
-              fontFamily: "'JetBrains Mono', monospace",
-              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-            }}><Download size={13} />Download PDF</a>
+              }}><Eye size={13} />View Resume</a>
+              <a href="/resume.pdf" download="Sagar_Shaw_Resume.pdf" className="link-hover" style={{
+                display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
+                background: `linear-gradient(135deg, ${t.accent}18, ${t.accentSub}12)`,
+                border: `1px solid ${t.accent}33`, borderRadius: 10,
+                color: t.accent, fontSize: 12, fontWeight: 600,
+                fontFamily: "'JetBrains Mono', monospace",
+                backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+              }}><Download size={13} />Download PDF</a>
+            </div>
           </div>
         </div>
-      </div>
+      </RevealOnMount>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12, marginBottom: 18 }}>
-        {stats.map((s, i) => (
-          <GlassCard key={s.label} t={t} style={{ padding: "18px 16px" }}>
-            <div style={{
-              fontSize: "2.1rem", fontWeight: 900, lineHeight: 1,
-              backgroundImage: `linear-gradient(135deg, ${t.gold}, ${t.goldLight})`,
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              backgroundClip: "text", fontFamily: "'Inter', sans-serif",
-            }}>{s.val}</div>
-            <div style={{ fontSize: 12, fontWeight: 600, color: t.text, marginTop: 7, fontFamily: "'Inter', sans-serif" }}>{s.label}</div>
-            <div style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>{s.sub}</div>
-          </GlassCard>
-        ))}
-      </div>
-
-      <GlassCard t={t} style={{ padding: "17px 19px" }}>
-        <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.textMuted, textTransform: "uppercase", letterSpacing: 2, marginBottom: 11 }}>Core Domains</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-          {["Computer Vision", "Generative AI", "Deep Learning", "NLP", "IoT / Embedded", "Cloud (Azure)", "Machine Learning"].map(d => <Tag key={d} label={d} t={t} />)}
+      <RevealOnMount delay={150}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12, marginBottom: 18 }}>
+          {stats.map((s) => (
+            <GlassCard key={s.label} t={t} style={{ padding: "18px 16px" }}>
+              <div style={{
+                fontSize: "2.1rem", fontWeight: 900, lineHeight: 1,
+                backgroundImage: `linear-gradient(135deg, ${t.gold}, ${t.goldLight})`,
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                backgroundClip: "text", fontFamily: "'Outfit', sans-serif",
+              }}>{s.val}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: t.text, marginTop: 7, fontFamily: "'Outfit', sans-serif" }}>{s.label}</div>
+              <div style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>{s.sub}</div>
+            </GlassCard>
+          ))}
         </div>
-      </GlassCard>
+      </RevealOnMount>
+
+      <RevealOnMount delay={300}>
+        <GlassCard t={t} style={{ padding: "17px 19px" }}>
+          <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.textMuted, textTransform: "uppercase", letterSpacing: 2, marginBottom: 11 }}>Core Domains</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+            {["Computer Vision", "Generative AI", "Deep Learning", "NLP", "IoT / Embedded", "Cloud (Azure)", "Machine Learning"].map(d => <Tag key={d} label={d} t={t} />)}
+          </div>
+        </GlassCard>
+      </RevealOnMount>
     </div>
   );
 }
@@ -340,14 +627,14 @@ function About({ t }) {
 
   return (
     <div>
-      <PageTitle t={t}>About Me</PageTitle>
+      <PageTitle t={t} num="01">About Me</PageTitle>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 310px", gap: 20, alignItems: "start" }}>
         <div>
           {[
             "I'm a Computer Science Engineering student specializing in AI & ML at JIS College of Engineering, Kalyani, expected to graduate in June 2027. My work spans computer vision for wildlife conservation, IoT-integrated health monitoring, and generative AI application development.",
             "I hold a patent for Arachnid — a bio-inspired robotic system using computer vision and deep learning to track endangered species in natural habitats. I also lead IntelliEat, an IoT-enabled system that applies AI to detect behavioral patterns linked to eating disorders.",
             "I bring hands-on industry experience from my AI/ML internship at Confitech Solutions, building GenAI-powered applications with OpenAI and Azure. Beyond engineering, I serve as an AICTE Idea Lab Ambassador and co-founded The Risers student community.",
-          ].map((p, i) => <p key={i} style={{ color: t.textSub, fontSize: 14, lineHeight: 1.85, marginBottom: 14, fontFamily: "'Inter', sans-serif" }}>{p}</p>)}
+          ].map((p, i) => <p key={i} style={{ color: t.textSub, fontSize: 14, lineHeight: 1.85, marginBottom: 14, fontFamily: "'Outfit', sans-serif" }}>{p}</p>)}
 
           <div style={{ marginTop: 24 }}>
             <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.textMuted, textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>Leadership & Activities</div>
@@ -454,11 +741,25 @@ function About({ t }) {
 // ─────────────────────────────────────────────
 function Projects({ t }) {
   const [open, setOpen] = useState(0);
+  const [filter, setFilter] = useState('All');
+  const filtered = filter === 'All' ? PROJECTS_DATA : PROJECTS_DATA.filter(p => p.category.includes(filter));
   return (
     <div>
-      <PageTitle t={t}>Featured Projects</PageTitle>
+      <PageTitle t={t} num="02">Featured Projects</PageTitle>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
+        {['All', 'ML-DL', 'Web-App', 'Hardware', 'IoT'].map(tab => (
+          <button key={tab} onClick={() => { setFilter(tab); setOpen(-1); }} style={{
+            padding: '7px 18px', borderRadius: 999, fontSize: 12,
+            fontFamily: "'JetBrains Mono', monospace", cursor: 'pointer',
+            transition: 'all 0.25s',
+            ...(filter === tab
+              ? { background: `linear-gradient(135deg, ${t.accent}, ${t.accentSub})`, color: '#fff', fontWeight: 700, border: 'none' }
+              : { background: t.card, border: `1px solid ${t.border}`, color: t.textSub, backdropFilter: 'blur(8px)' }),
+          }}>{tab}</button>
+        ))}
+      </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
-        {PROJECTS_DATA.map((p, i) => {
+        {filtered.map((p, i) => {
           const isOpen = open === i;
           return (
             <div key={i} className="card-hover glass-card" style={{
@@ -483,7 +784,7 @@ function Projects({ t }) {
                   {isOpen ? <ChevronDown size={15} color="#fff" /> : <ChevronRight size={15} color={t.textMuted} />}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Inter', sans-serif" }}>{p.title}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{p.title}</div>
                   <div style={{ fontSize: 12, color: t.textMuted, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.description}</div>
                 </div>
                 <span style={{
@@ -511,6 +812,24 @@ function Projects({ t }) {
                       </div>
                     ))}
                   </div>
+                  <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
+                    {p.github && (
+                      <a href={p.github} target="_blank" rel="noopener noreferrer" className="card-hover" style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 16px',
+                        borderRadius: 10, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
+                        background: t.card, border: `1px solid ${t.border}`, color: t.textSub,
+                        backdropFilter: 'blur(8px)', textDecoration: 'none', transition: 'all 0.25s',
+                      }}><GitBranch size={13} />Source Code</a>
+                    )}
+                    {p.demo && (
+                      <a href={p.demo} target="_blank" rel="noopener noreferrer" className="card-hover" style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 16px',
+                        borderRadius: 10, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
+                        background: `linear-gradient(135deg, ${t.accent}, ${t.accentSub})`, border: 'none',
+                        color: '#fff', textDecoration: 'none', transition: 'all 0.25s',
+                      }}><ExternalLink size={13} />Live Demo</a>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -527,27 +846,39 @@ function Projects({ t }) {
 function Skills({ t }) {
   return (
     <div>
-      <PageTitle t={t}>Skills & Technologies</PageTitle>
+      <PageTitle t={t} num="03">Tech Stack</PageTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 14 }}>
         {SKILLS_DATA.map(({ category, Icon, items }) => (
           <GlassCard key={category} t={t}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 15 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 16 }}>
               <div style={{
-                width: 28, height: 28, borderRadius: 8,
+                width: 32, height: 32, borderRadius: 10,
                 background: `linear-gradient(135deg, ${t.accent}22, ${t.accentSub}11)`,
+                border: `1px solid ${t.accent}33`,
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
-                <Icon size={14} color={t.accentSub} />
+                <Icon size={15} color={t.accentSub} />
               </div>
-              <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub, textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600 }}>{category}</div>
+              <div style={{ fontSize: 13, fontFamily: "'Outfit', sans-serif", color: t.text, fontWeight: 700 }}>{category}</div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {items.map(({ name, level }) => (
-                <div key={name} className="skill-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", background: t.surface, borderRadius: 9, transition: "background .2s" }}>
-                  <span style={{ fontSize: 12, color: t.text, fontFamily: "'Inter', sans-serif" }}>{name}</span>
-                  <Dots level={level} t={t} />
-                </div>
-              ))}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {items.map(({ name, level }) => {
+                const isStrong = level >= 4;
+                return (
+                  <span key={name} className="tag-hover" style={{
+                    display: "inline-block", padding: "6px 14px", borderRadius: 999,
+                    fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: isStrong ? 600 : 400,
+                    background: isStrong
+                      ? `linear-gradient(135deg, ${t.accent}15, ${t.accentSub}08)`
+                      : t.surface,
+                    border: `1px solid ${isStrong ? t.accent + "55" : t.border}`,
+                    color: isStrong ? t.accent : t.textSub,
+                    boxShadow: isStrong ? `0 0 12px ${t.accent}12` : "none",
+                    transition: "all 0.25s ease",
+                  }}>{name}</span>
+                );
+              })}
             </div>
           </GlassCard>
         ))}
@@ -562,7 +893,7 @@ function Skills({ t }) {
 function Experience({ t }) {
   return (
     <div>
-      <PageTitle t={t}>Experience</PageTitle>
+      <PageTitle t={t} num="04">Experience</PageTitle>
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         {EXPERIENCE_DATA.map((e, i) => (
           <GlassCard key={i} t={t} style={{ position: "relative", overflow: "hidden" }}>
@@ -571,7 +902,7 @@ function Experience({ t }) {
             <div style={{ paddingLeft: 8 }}>
               <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 11 }}>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Inter', sans-serif" }}>{e.role}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{e.role}</div>
                   <div style={{ fontSize: 12, color: t.accentSub, marginTop: 3 }}>{e.company} · <span style={{ color: t.textMuted }}>{e.type}</span></div>
                 </div>
                 <div style={{ fontSize: 11, color: t.textMuted, fontFamily: "'JetBrains Mono', monospace", display: "flex", alignItems: "center", gap: 4 }}>
@@ -601,13 +932,13 @@ function Experience({ t }) {
 function Certifications({ t }) {
   return (
     <div>
-      <PageTitle t={t}>Certifications</PageTitle>
+      <PageTitle t={t} num="05">Certifications</PageTitle>
       <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
         {CERTS_DATA.map((c, i) => (
           <GlassCard key={i} t={t}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Inter', sans-serif" }}>{c.name}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{c.name}</div>
                 <div style={{ fontSize: 12, color: t.textMuted, marginTop: 3 }}>{c.org} · {c.weeks}-week course · {c.period}</div>
               </div>
               <div style={{ textAlign: "right", flexShrink: 0 }}>
@@ -615,7 +946,7 @@ function Certifications({ t }) {
                   fontSize: "1.8rem", fontWeight: 900, lineHeight: 1,
                   backgroundImage: `linear-gradient(135deg, ${t.gold}, ${t.goldLight})`,
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                  backgroundClip: "text", fontFamily: "'Inter', sans-serif",
+                  backgroundClip: "text", fontFamily: "'Outfit', sans-serif",
                 }}>{c.score}%</div>
                 <div style={{ fontSize: 10, color: t.textMuted, marginTop: 1 }}>Score</div>
               </div>
@@ -636,7 +967,7 @@ function Certifications({ t }) {
 
       <GlassCard t={t} style={{ marginTop: 18, padding: "20px 22px" }}>
         <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.gold, textTransform: "uppercase", letterSpacing: 2, marginBottom: 12, fontWeight: 600 }}>Career Goal</div>
-        <p style={{ color: t.textSub, fontSize: 14, lineHeight: 1.85, fontStyle: "italic", borderLeft: `3px solid ${t.gold}`, paddingLeft: 14, margin: 0, fontFamily: "'Inter', sans-serif" }}>
+        <p style={{ color: t.textSub, fontSize: 14, lineHeight: 1.85, fontStyle: "italic", borderLeft: `3px solid ${t.gold}`, paddingLeft: 14, margin: 0, fontFamily: "'Outfit', sans-serif" }}>
           My near-term goal is to deepen my expertise in computer vision and generative AI through research collaborations, targeting a full-time AI/ML Engineer role focused on production-ready, real-world AI systems. Longer term, I aim to lead applied-AI initiatives bridging IoT, healthcare, and conservation technology — scaling projects like Arachnid and IntelliEat into impactful solutions.
         </p>
       </GlassCard>
@@ -676,7 +1007,7 @@ function Contact({ t }) {
   const inp = {
     width: "100%", padding: "10px 13px", background: t.surface,
     border: `1px solid ${t.border}`, borderRadius: 9, color: t.text,
-    fontSize: 13, fontFamily: "'Inter', sans-serif", boxSizing: "border-box",
+    fontSize: 13, fontFamily: "'Outfit', sans-serif", boxSizing: "border-box",
     transition: "border-color .25s, box-shadow .25s",
   };
 
@@ -689,11 +1020,11 @@ function Contact({ t }) {
 
   return (
     <div>
-      <PageTitle t={t}>Get In Touch</PageTitle>
+      <PageTitle t={t} num="06">Get In Touch</PageTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10, marginBottom: 18 }}>
         {avail.map(a => (
           <GlassCard key={a.label} t={t} style={{ padding: "14px 10px", textAlign: "center" }}>
-            <div style={{ fontSize: 15, fontWeight: 700, color: a.c, fontFamily: "'Inter', sans-serif" }}>{a.label}</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: a.c, fontFamily: "'Outfit', sans-serif" }}>{a.label}</div>
             <div style={{ fontSize: 11, color: t.textMuted, marginTop: 3 }}>{a.sub}</div>
           </GlassCard>
         ))}
@@ -754,7 +1085,7 @@ function Contact({ t }) {
             border: "none", borderRadius: 9, color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
             transition: "all .3s", boxShadow: `0 4px 16px ${t.accent}33`,
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Outfit', sans-serif",
           }}>
             {sent ? <Check size={13} /> : <ExternalLink size={13} />}
             {sent ? "Opening mail client…" : "Send Message"}
@@ -904,7 +1235,7 @@ export default function App() {
   const curIdx = NAV_IDS.indexOf(section);
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: t.bg, color: t.text, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", position: "relative", overflow: "hidden" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: t.bg, color: t.text, fontFamily: "'Outfit', system-ui, -apple-system, sans-serif", position: "relative", overflow: "hidden" }}>
       <style>{`
         @keyframes slideInLeft { from { opacity:0; transform:translateX(70px); } to { opacity:1; transform:translateX(0); } }
         @keyframes slideInRight { from { opacity:0; transform:translateX(-70px); } to { opacity:1; transform:translateX(0); } }
@@ -1000,6 +1331,19 @@ export default function App() {
         }
       `}</style>
 
+      {/* ── PARTICLE CANVAS ── */}
+      <ParticleCanvas t={t} />
+
+      {/* ── NOISE OVERLAY ── */}
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none",
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        opacity: theme === "midnight" ? 0.035 : 0.02,
+      }} />
+
+      {/* ── CUSTOM CURSOR ── */}
+      <CustomCursor t={t} />
+
       {/* ── BACKGROUND ORBS ── */}
       <div style={{ position: "fixed", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 0 }}>
         <div style={{
@@ -1052,7 +1396,7 @@ export default function App() {
           }}>
             <img src="/profile.png" alt="SS" style={{ width: "100%", height: "100%", borderRadius: 5.5, objectFit: "cover", objectPosition: "center 20%", display: "block" }} />
           </div>
-          <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", color: t.text }}>Sagar Shaw</span>
+          <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Outfit', sans-serif", color: t.text }}>Sagar Shaw</span>
         </div>
         <button onClick={() => setTheme(th => th === "midnight" ? "matinee" : "midnight")} style={{
           width: 36, height: 36, borderRadius: 10, border: `1px solid ${t.border}`,
@@ -1098,7 +1442,7 @@ export default function App() {
                 }}
               />
             </div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Inter', sans-serif" }}>Sagar Shaw</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>Sagar Shaw</div>
             <div style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>AI/ML Engineer</div>
           </div>
         )}
