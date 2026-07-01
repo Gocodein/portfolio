@@ -98,6 +98,9 @@ function CustomCursor({ t }) {
   const outerRef = useRef(null);
   const innerRef = useRef(null);
   const [visible, setVisible] = useState(true);
+  const mouse = useRef({ x: -100, y: -100 });
+  const outerPos = useRef({ x: -100, y: -100 });
+  const rafId = useRef(null);
 
   useEffect(() => {
     const checkWidth = () => setVisible(window.innerWidth >= 768);
@@ -111,23 +114,32 @@ function CustomCursor({ t }) {
     let hovering = false;
 
     const onMove = (e) => {
-      const { clientX: x, clientY: y } = e;
+      mouse.current = { x: e.clientX, y: e.clientY };
       if (innerRef.current) {
-        innerRef.current.style.left = x + "px";
-        innerRef.current.style.top = y + "px";
-      }
-      if (outerRef.current) {
-        outerRef.current.style.left = x + "px";
-        outerRef.current.style.top = y + "px";
+        innerRef.current.style.left = e.clientX + "px";
+        innerRef.current.style.top = e.clientY + "px";
       }
     };
+
+    // Smooth lerp loop for outer ring
+    const animate = () => {
+      const lerp = 0.18;
+      outerPos.current.x += (mouse.current.x - outerPos.current.x) * lerp;
+      outerPos.current.y += (mouse.current.y - outerPos.current.y) * lerp;
+      if (outerRef.current) {
+        outerRef.current.style.left = outerPos.current.x + "px";
+        outerRef.current.style.top = outerPos.current.y + "px";
+      }
+      rafId.current = requestAnimationFrame(animate);
+    };
+    rafId.current = requestAnimationFrame(animate);
 
     const onOver = (e) => {
       if (e.target.closest("button, a, input, textarea, select")) {
         if (!hovering && outerRef.current) {
           hovering = true;
           outerRef.current.style.transform = "translate(-50%,-50%) scale(1.5)";
-          outerRef.current.style.borderColor = t.accent + "99"; // 60%
+          outerRef.current.style.borderColor = t.accent + "99";
         }
       }
     };
@@ -136,7 +148,7 @@ function CustomCursor({ t }) {
         hovering = false;
         if (outerRef.current) {
           outerRef.current.style.transform = "translate(-50%,-50%) scale(1)";
-          outerRef.current.style.borderColor = t.accent + "66"; // 40%
+          outerRef.current.style.borderColor = t.accent + "66";
         }
       }
     };
@@ -148,12 +160,13 @@ function CustomCursor({ t }) {
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOut);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
     };
   }, [t, visible]);
 
   if (!visible) return null;
 
-  const shared = { position: "fixed", zIndex: 9999, pointerEvents: "none", borderRadius: "50%", top: 0, left: 0 };
+  const shared = { position: "fixed", zIndex: 9999, pointerEvents: "none", borderRadius: "50%", top: -100, left: -100 };
 
   return (
     <>
@@ -161,11 +174,11 @@ function CustomCursor({ t }) {
         ref={outerRef}
         style={{
           ...shared,
-          width: 32,
-          height: 32,
+          width: 36,
+          height: 36,
           border: `1.5px solid ${t.accent}66`,
           transform: "translate(-50%,-50%) scale(1)",
-          transition: "left 0.08s ease, top 0.08s ease, transform 0.15s ease, border-color 0.15s ease",
+          transition: "transform 0.15s ease, border-color 0.15s ease",
         }}
       />
       <div
@@ -174,7 +187,7 @@ function CustomCursor({ t }) {
           ...shared,
           width: 5,
           height: 5,
-          backgroundColor: t.accent + "B3", // 70%
+          backgroundColor: t.accent + "B3",
           transform: "translate(-50%,-50%)",
         }}
       />
@@ -267,6 +280,7 @@ const SKILLS_DATA = [
     items: [
       { name: "Python", level: 5 }, { name: "Java", level: 4 },
       { name: "C++", level: 3 }, { name: "C", level: 3 }, { name: "SQL", level: 3 },
+      { name: "Problem Solving", level: 4 },
     ],
   },
   {
@@ -309,7 +323,7 @@ const PROJECTS_DATA = [
       "Data cleaning & pattern detection pipeline for continuous model retraining",
       "IoT device integration across Arduino Mega, Raspberry Pi 4, and Pi Camera",
     ],
-    category: ['ML-DL', 'Hardware', 'IoT'],
+    category: ['ML-DL', 'Hardware/IoT'],
     github: 'https://github.com/Gocodein/Arachnid',
     demo: null,
   },
@@ -324,7 +338,7 @@ const PROJECTS_DATA = [
       "AI algorithms detecting behavioral patterns associated with anorexia and bulimia",
       "Real-time analytics dashboard for health practitioners and caregivers",
     ],
-    category: ['ML-DL', 'IoT', 'Web-App'],
+    category: ['ML-DL', 'Hardware/IoT', 'Web-App'],
     github: 'https://github.com/Gocodein/IntelliEat',
     demo: null,
   },
@@ -346,6 +360,15 @@ const PROJECTS_DATA = [
 ];
 
 const EXPERIENCE_DATA = [
+  {
+    role: "SAP Certified — Back-End Developer (ABAP Cloud)", company: "SAP SE", type: "Global Certification",
+    period: "June 2026",
+    techStack: ["ABAP Cloud", "SAP BTP", "Back-End Development"],
+    points: [
+      "Earned SAP's global certification through a hands-on, task-based proctored exam.",
+      "Completed all nine real-world ABAP Cloud development tasks on SAP Business Technology Platform.",
+    ],
+  },
   {
     role: "AI/ML Engineer — Intern", company: "Confitech Solutions Pvt. Ltd.", type: "Remote",
     period: "17 May 2025 — 18 Aug 2025",
@@ -373,7 +396,11 @@ const EXPERIENCE_DATA = [
 const CERTS_DATA = [
   { name: "Natural Language Processing", org: "NPTEL", weeks: 12, period: "Jan – Apr 2026", score: 57 },
   { name: "Fundamentals of Artificial Intelligence", org: "NPTEL", weeks: 12, period: "Jul – Oct 2025", score: 63 },
-  { name: "Programming in Java", org: "NPTEL", weeks: 12, period: "Jan – Apr 2026", score: 72 },
+  { name: "Programming in Java", org: "NPTEL", weeks: 12, period: "Jan – Apr 2025", score: 72 },
+  { name: "Machine Learning with Python", org: "Coursera (IBM)", weeks: null, period: "June 2026", score: null },
+  { name: "Intermediate Machine Learning", org: "Kaggle", weeks: null, period: "June 2026", score: null },
+  { name: "Introduction to SQL", org: "DataCamp", weeks: null, period: "Nov 2025", score: null },
+  { name: "Intermediate SQL", org: "DataCamp", weeks: null, period: "Nov 2025", score: null },
 ];
 
 const LEADERSHIP_DATA = [
@@ -747,7 +774,7 @@ function Projects({ t }) {
     <div>
       <PageTitle t={t} num="02">Featured Projects</PageTitle>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
-        {['All', 'ML-DL', 'Web-App', 'Hardware', 'IoT'].map(tab => (
+        {['All', 'ML-DL', 'Web-App', 'Hardware/IoT'].map(tab => (
           <button key={tab} onClick={() => { setFilter(tab); setOpen(-1); }} style={{
             padding: '7px 18px', borderRadius: 999, fontSize: 12,
             fontFamily: "'JetBrains Mono', monospace", cursor: 'pointer',
