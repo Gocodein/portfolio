@@ -377,15 +377,15 @@ const CERTS_SCORED = [
   { name: "Natural Language Processing", org: "NPTEL", weeks: 12, period: "Jan – Apr 2026", score: 57, verify: "https://nptel.ac.in/noc/E_Certificate/NOC26CS45S105750069604840008" },
   { name: "Fundamentals of Artificial Intelligence", org: "NPTEL", weeks: 12, period: "Jul – Oct 2025", score: 63, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25GE55S125960077910799707" },
   { name: "Programming in Java", org: "NPTEL", weeks: 12, period: "Jan – Apr 2025", score: 72, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25CS57S114840034704432631" },
-  { name: "SAP Certified – Back-End Developer (ABAP Cloud)", org: "SAP SE", weeks: null, period: "2026 · Valid 1 yr", score: null, verify: "https://www.credly.com/badges", badge: "Exam Certified" },
+  { name: "SAP Certified – Back-End Developer (ABAP Cloud)", org: "SAP SE", weeks: null, period: "June 2026 – June 2027 · 1 yr Validiti", score: null, verify: "https://www.credly.com/badges/96cfe04d-c44a-45d0-ab7b-52293a60a771", badge: "Exam Certified" },
 ];
 
 // Quick course completions (chip/tag layout — no score)
 const CERTS_COURSES = [
-  { name: "Machine Learning with Python", org: "IBM / Coursera", verify: "https://coursera.org" },
-  { name: "Intermediate Machine Learning", org: "Kaggle", verify: "https://kaggle.com/learn/certification" },
-  { name: "DBMS – Master the Fundamentals & Advanced Topics", org: "Scaler", verify: "https://moonshot.scaler.com" },
-  { name: "Intermediate SQL", org: "Sololearn", verify: "https://www.sololearn.com" },
+  { name: "Machine Learning with Python", org: "IBM ", verify: "https://drive.google.com/file/d/1EfBRGrMfajqCaYVWtkXOr6DqS7H-syBv/view?usp=sharing" },
+  { name: "Intermediate Machine Learning", org: "Kaggle", verify: "https://drive.google.com/file/d/1mQ3gHFaULPRz9MbnKlHpeBHhbJRpjaXB/view?usp=sharing" },
+  { name: "DBMS – Master the Fundamentals & Advanced Topics", org: "Scaler", verify: "https://drive.google.com/file/d/1MOWPD_XRDOGUFiJ6-b79kAJHLpI8twgD/view?usp=sharing" },
+  { name: "Intermediate SQL", org: "Sololearn", verify: "https://drive.google.com/file/d/1WwmCJJ6ASE9BnXVR55CgufRiRUTa0yid/view?usp=sharing" },
 ];
 
 const LEADERSHIP_DATA = [
