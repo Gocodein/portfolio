@@ -374,9 +374,9 @@ const EXPERIENCE_DATA = [
 
 // Scored / exam-based certs (full card with score bar)
 const CERTS_SCORED = [
-  { name: "Natural Language Processing", org: "NPTEL", weeks: 12, period: "Jan – Apr 2026", score: 57, verify: "https://nptel.ac.in/noc/E_Certificate/linkedin/noc25-cs122/NPTEL25CS122S6590095604551246.jpg" },
-  { name: "Fundamentals of Artificial Intelligence", org: "NPTEL", weeks: 12, period: "Jul – Oct 2025", score: 63, verify: "https://nptel.ac.in/noc/E_Certificate/linkedin/noc25-cs43/NPTEL25CS43S6590095604551246.jpg" },
-  { name: "Programming in Java", org: "NPTEL", weeks: 12, period: "Jan – Apr 2025", score: 72, verify: "https://nptel.ac.in/noc/E_Certificate/linkedin/noc25-cs64/NPTEL25CS64S6590095604551246.jpg" },
+  { name: "Natural Language Processing", org: "NPTEL", weeks: 12, period: "Jan – Apr 2026", score: 57, verify: "https://nptel.ac.in/noc/E_Certificate/NOC26CS45S105750069604840008" },
+  { name: "Fundamentals of Artificial Intelligence", org: "NPTEL", weeks: 12, period: "Jul – Oct 2025", score: 63, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25GE55S125960077910799707" },
+  { name: "Programming in Java", org: "NPTEL", weeks: 12, period: "Jan – Apr 2025", score: 72, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25CS57S114840034704432631" },
   { name: "SAP Certified – Back-End Developer (ABAP Cloud)", org: "SAP SE", weeks: null, period: "2026 · Valid 1 yr", score: null, verify: "https://www.credly.com/badges", badge: "Exam Certified" },
 ];
 
@@ -476,8 +476,8 @@ function Overview({ t }) {
   const stats = [
     { val: cgpa, label: "CGPA", sub: `Best SGPA: ${Math.max(...SGPA_DATA.map(d => d.sgpa))}` },
     { val: "1", label: "Patent Filed", sub: "No. 202531071175 A" },
-    { val: "7", label: "Certifications", sub: "NPTEL, SAP, IBM & more" },
     { val: "1", label: "Internships", sub: "AI/ML focused" },
+    { val: "7", label: "Certifications", sub: "NPTEL, SAP, IBM & more" },
   ];
   const cardRef = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
