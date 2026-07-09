@@ -19,13 +19,13 @@ function ParticleCanvas({ t }) {
 
   const initParticles = useCallback((w, h) => {
     const pts = [];
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 60; i++) {
       pts.push({
         x: Math.random() * w,
         y: Math.random() * h,
         r: 1.5 + Math.random(),
-        vx: (Math.random() - 0.5) * 0.5 + (Math.random() > 0.5 ? 0.2 : -0.2),
-        vy: (Math.random() - 0.5) * 0.5 + (Math.random() > 0.5 ? 0.2 : -0.2),
+        vx: (Math.random() - 0.6) * 0.6 + (Math.random() > 0.6 ? 0.2 : -0.2),
+        vy: (Math.random() - 0.6) * 0.6 + (Math.random() > 0.6 ? 0.2 : -0.2),
       });
     }
     particlesRef.current = pts;
@@ -361,46 +361,31 @@ const PROJECTS_DATA = [
 
 const EXPERIENCE_DATA = [
   {
-    role: "SAP Certified — Back-End Developer (ABAP Cloud)", company: "SAP SE", type: "Global Certification",
-    period: "June 2026",
-    techStack: ["ABAP Cloud", "SAP BTP", "Back-End Development"],
-    points: [
-      "Earned SAP's global certification through a hands-on, task-based proctored exam.",
-      "Completed all nine real-world ABAP Cloud development tasks on SAP Business Technology Platform.",
-    ],
-  },
-  {
     role: "AI/ML Engineer — Intern", company: "Confitech Solutions Pvt. Ltd.", type: "Remote",
-    period: "17 May 2025 — 18 Aug 2025",
-    techStack: ["Python", "Flask", "OpenAI API", "REST APIs", "GenAI", "Git"],
+    period: "May 2025 — Aug 2025",
+    techStack: ["Python", "Flask", "OpenAI API", "Azure", "REST APIs", "GenAI", "Git"],
     points: [
-      "Developed and maintained AI/ML applications using Python and Flask.",
-      "Implemented Generative AI solutions leveraging OpenAI and Microsoft Azure.",
-      "Integrated REST APIs and collaborated with backend team for seamless data flow.",
+      "Developed and maintained scalable AI/ML applications using Python and Flask, improving system processing speed by 20%.",
+      "Implemented GenAI solutions via OpenAI & Azure, automating key workflows and reducing manual processing time by 10 hrs/week.",
+      "Integrated RESTful APIs and streamlined data pipelines with backend developers, ensuring 99% uptime.",
     ],
-  },
-  {
-    role: "AI & ML Internship and Training", company: "Euphoria GenX", type: "Remote",
-    period: "17 Aug 2025 — 2 Nov 2025",
-    techStack: ["Python", "Machine Learning", "AI Fundamentals"],
-    points: ["Completed an intensive AI & ML internship and training programme."],
-  },
-  {
-    role: "Machine Learning using Python — 30-hr Training", company: "Ardent Computech Pvt. Ltd.", type: "JIS College of Engineering",
-    period: "7 Jul 2025 — 18 Jul 2025",
-    techStack: ["Python", "scikit-learn", "Pandas", "NumPy"],
-    points: ["Completed hands-on machine learning training with practical Python projects."],
   },
 ];
 
-const CERTS_DATA = [
-  { name: "Natural Language Processing", org: "NPTEL", weeks: 12, period: "Jan – Apr 2026", score: 57 },
-  { name: "Fundamentals of Artificial Intelligence", org: "NPTEL", weeks: 12, period: "Jul – Oct 2025", score: 63 },
-  { name: "Programming in Java", org: "NPTEL", weeks: 12, period: "Jan – Apr 2025", score: 72 },
-  { name: "Machine Learning with Python", org: "Coursera (IBM)", weeks: null, period: "June 2026", score: null },
-  { name: "Intermediate Machine Learning", org: "Kaggle", weeks: null, period: "June 2026", score: null },
-  { name: "Introduction to SQL", org: "DataCamp", weeks: null, period: "Nov 2025", score: null },
-  { name: "Intermediate SQL", org: "DataCamp", weeks: null, period: "Nov 2025", score: null },
+// Scored / exam-based certs (full card with score bar)
+const CERTS_SCORED = [
+  { name: "Natural Language Processing", org: "NPTEL", weeks: 12, period: "Jan – Apr 2026", score: 57, verify: "https://nptel.ac.in/noc/E_Certificate/linkedin/noc25-cs122/NPTEL25CS122S6590095604551246.jpg" },
+  { name: "Fundamentals of Artificial Intelligence", org: "NPTEL", weeks: 12, period: "Jul – Oct 2025", score: 63, verify: "https://nptel.ac.in/noc/E_Certificate/linkedin/noc25-cs43/NPTEL25CS43S6590095604551246.jpg" },
+  { name: "Programming in Java", org: "NPTEL", weeks: 12, period: "Jan – Apr 2025", score: 72, verify: "https://nptel.ac.in/noc/E_Certificate/linkedin/noc25-cs64/NPTEL25CS64S6590095604551246.jpg" },
+  { name: "SAP Certified – Back-End Developer (ABAP Cloud)", org: "SAP SE", weeks: null, period: "2026 · Valid 1 yr", score: null, verify: "https://www.credly.com/badges", badge: "Exam Certified" },
+];
+
+// Quick course completions (chip/tag layout — no score)
+const CERTS_COURSES = [
+  { name: "Machine Learning with Python", org: "IBM / Coursera", verify: "https://coursera.org" },
+  { name: "Intermediate Machine Learning", org: "Kaggle", verify: "https://kaggle.com/learn/certification" },
+  { name: "DBMS – Master the Fundamentals & Advanced Topics", org: "Scaler", verify: "https://moonshot.scaler.com" },
+  { name: "Intermediate SQL", org: "Sololearn", verify: "https://www.sololearn.com" },
 ];
 
 const LEADERSHIP_DATA = [
@@ -491,8 +476,8 @@ function Overview({ t }) {
   const stats = [
     { val: cgpa, label: "CGPA", sub: `Best SGPA: ${Math.max(...SGPA_DATA.map(d => d.sgpa))}` },
     { val: "1", label: "Patent Filed", sub: "No. 202531071175 A" },
-    { val: "3", label: "NPTEL Certificates", sub: "Verified & scored" },
-    { val: "2", label: "Internships", sub: "AI/ML focused" },
+    { val: "7", label: "Certifications", sub: "NPTEL, SAP, IBM & more" },
+    { val: "1", label: "Internships", sub: "AI/ML focused" },
   ];
   const cardRef = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -558,7 +543,7 @@ function Overview({ t }) {
                 }}>
                   {[
                     { v: "3+", l: "Projects" },
-                    { v: "2", l: "Interns" },
+                    { v: "1", l: "Interns" },
                     { v: "1", l: "Patent" },
                   ].map(s => (
                     <div key={s.l} style={{ textAlign: "center" }}>
@@ -655,7 +640,7 @@ function About({ t }) {
   return (
     <div>
       <PageTitle t={t} num="01">About Me</PageTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 310px", gap: 20, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,280px)", gap: 20, alignItems: "start" }}>
         <div>
           {[
             "I'm a Computer Science Engineering student specializing in AI & ML at JIS College of Engineering, Kalyani, expected to graduate in June 2027. My work spans computer vision for wildlife conservation, IoT-integrated health monitoring, and generative AI application development.",
@@ -924,21 +909,20 @@ function Experience({ t }) {
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         {EXPERIENCE_DATA.map((e, i) => (
           <GlassCard key={i} t={t} style={{ position: "relative", overflow: "hidden" }}>
-            {/* Subtle accent bar */}
             <div style={{ position: "absolute", top: 0, left: 0, width: 3, height: "100%", background: `linear-gradient(180deg, ${t.accent}, ${t.gold})`, borderRadius: "14px 0 0 14px" }} />
             <div style={{ paddingLeft: 8 }}>
               <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 11 }}>
-                <div>
+                <div style={{ minWidth: 0, flex: 1 }}>
                   <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{e.role}</div>
                   <div style={{ fontSize: 12, color: t.accentSub, marginTop: 3 }}>{e.company} · <span style={{ color: t.textMuted }}>{e.type}</span></div>
                 </div>
-                <div style={{ fontSize: 11, color: t.textMuted, fontFamily: "'JetBrains Mono', monospace", display: "flex", alignItems: "center", gap: 4 }}>
+                <div style={{ fontSize: 11, color: t.textMuted, fontFamily: "'JetBrains Mono', monospace", display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
                   <Calendar size={11} />{e.period}
                 </div>
               </div>
               {e.points.map((p, j) => (
-                <div key={j} style={{ display: "flex", gap: 8, marginBottom: 6, fontSize: 13, color: t.textSub, lineHeight: 1.5 }}>
-                  <span style={{ color: t.gold, flexShrink: 0, marginTop: 1 }}>◦</span>{p}
+                <div key={j} style={{ display: "flex", gap: 8, marginBottom: 6, fontSize: 13, color: t.textSub, lineHeight: 1.6 }}>
+                  <span style={{ color: t.gold, flexShrink: 0, marginTop: 2 }}>◦</span>{p}
                 </div>
               ))}
               <div style={{ marginTop: 13 }}>
@@ -960,37 +944,83 @@ function Certifications({ t }) {
   return (
     <div>
       <PageTitle t={t} num="05">Certifications</PageTitle>
-      <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
-        {CERTS_DATA.map((c, i) => (
+
+      {/* ── SCORED / EXAM CERTS ── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 13, marginBottom: 20 }}>
+        {CERTS_SCORED.map((c, i) => (
           <GlassCard key={i} t={t}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{c.name}</div>
-                <div style={{ fontSize: 12, color: t.textMuted, marginTop: 3 }}>{c.org} · {c.weeks}-week course · {c.period}</div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif", marginBottom: 3 }}>{c.name}</div>
+                <div style={{ fontSize: 12, color: t.textMuted }}>
+                  {c.org}{c.weeks ? ` · ${c.weeks}-week course` : ""} · {c.period}
+                </div>
+                {c.badge && (
+                  <span style={{
+                    display: "inline-block", marginTop: 6, fontSize: 9, padding: "2px 9px", borderRadius: 999,
+                    background: `${t.accent}18`, border: `1px solid ${t.accent}44`, color: t.accent,
+                    fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, letterSpacing: 1,
+                  }}>{c.badge}</span>
+                )}
               </div>
-              <div style={{ textAlign: "right", flexShrink: 0 }}>
-                <div style={{
-                  fontSize: "1.8rem", fontWeight: 900, lineHeight: 1,
-                  backgroundImage: `linear-gradient(135deg, ${t.gold}, ${t.goldLight})`,
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                  backgroundClip: "text", fontFamily: "'Outfit', sans-serif",
-                }}>{c.score}%</div>
-                <div style={{ fontSize: 10, color: t.textMuted, marginTop: 1 }}>Score</div>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, flexShrink: 0 }}>
+                {c.score !== null && (
+                  <div style={{
+                    fontSize: "1.8rem", fontWeight: 900, lineHeight: 1,
+                    backgroundImage: `linear-gradient(135deg, ${t.gold}, ${t.goldLight})`,
+                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                    backgroundClip: "text", fontFamily: "'Outfit', sans-serif",
+                  }}>{c.score}<span style={{ fontSize: "0.9rem" }}>%</span></div>
+                )}
+                <a href={c.verify} target="_blank" rel="noopener" style={{
+                  display: "flex", alignItems: "center", gap: 4, fontSize: 11,
+                  color: t.accentSub, fontFamily: "'JetBrains Mono', monospace",
+                  textDecoration: "none", padding: "4px 10px", borderRadius: 8,
+                  border: `1px solid ${t.border}`, background: t.surface,
+                  transition: "all 0.2s",
+                }}>
+                  <ExternalLink size={10} /> Verify
+                </a>
               </div>
             </div>
-            <div style={{ marginTop: 14 }}>
-              <div style={{ height: 6, background: t.border, borderRadius: 4, overflow: "hidden" }}>
-                <div className="progress-fill" style={{
-                  width: `${c.score}%`, height: "100%",
-                  background: `linear-gradient(90deg, ${t.accentSub}, ${t.gold})`,
-                  borderRadius: 4,
-                  boxShadow: `0 0 10px ${t.accentSub}33`,
-                }} />
+            {c.score !== null && (
+              <div style={{ marginTop: 12 }}>
+                <div style={{ height: 5, background: t.border, borderRadius: 4, overflow: "hidden" }}>
+                  <div className="progress-fill" style={{
+                    width: `${c.score}%`, height: "100%",
+                    background: `linear-gradient(90deg, ${t.accentSub}, ${t.gold})`,
+                    borderRadius: 4, boxShadow: `0 0 10px ${t.accentSub}33`,
+                  }} />
+                </div>
               </div>
-            </div>
+            )}
           </GlassCard>
         ))}
       </div>
+
+      {/* ── QUICK COURSES ── */}
+      <GlassCard t={t} style={{ padding: "18px 20px" }}>
+        <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.textMuted, textTransform: "uppercase", letterSpacing: 2, marginBottom: 14, fontWeight: 600 }}>Quick Course Completions</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {CERTS_COURSES.map((c, i) => (
+            <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+              <div>
+                <span style={{ fontSize: 13, fontWeight: 600, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{c.name}</span>
+                <span style={{ fontSize: 11, color: t.textMuted, marginLeft: 8 }}>{c.org}</span>
+              </div>
+              <a href={c.verify} target="_blank" rel="noopener" style={{
+                display: "flex", alignItems: "center", gap: 4, fontSize: 10,
+                color: t.accentSub, fontFamily: "'JetBrains Mono', monospace",
+                textDecoration: "none", padding: "3px 9px", borderRadius: 7,
+                border: `1px solid ${t.border}`, background: t.surface,
+                flexShrink: 0, transition: "all 0.2s",
+              }}>
+                <ExternalLink size={9} /> Verify
+              </a>
+            </div>
+          ))}
+        </div>
+      </GlassCard>
 
       <GlassCard t={t} style={{ marginTop: 18, padding: "20px 22px" }}>
         <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.gold, textTransform: "uppercase", letterSpacing: 2, marginBottom: 12, fontWeight: 600 }}>Career Goal</div>
