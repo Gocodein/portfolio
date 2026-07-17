@@ -272,6 +272,7 @@ const SGPA_DATA = [
   { sem: "Sem 3", sgpa: 7.89 },
   { sem: "Sem 4", sgpa: 8.18 },
   { sem: "Sem 5", sgpa: 7.93 },
+  { sem: "Sem 6", sgpa: 7.51 },
 ];
 
 const SKILLS_DATA = [
@@ -324,7 +325,7 @@ const PROJECTS_DATA = [
       "IoT device integration across Arduino Mega, Raspberry Pi 4, and Pi Camera",
     ],
     category: ['ML-DL', 'Hardware/IoT'],
-    github: 'https://github.com/Gocodein/Arachnid',
+    github: 'https://github.com/Gocodein/spidy.git',
     demo: null,
   },
   {
