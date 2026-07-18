@@ -5,6 +5,7 @@ import {
   ChevronDown, ChevronRight, Copy, Check, ExternalLink,
   Award, Calendar, Terminal, Database, Cpu, ChevronLeft,
   Menu, X, Eye, Download,
+  Train,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────
@@ -58,7 +59,7 @@ function ParticleCanvas({ t }) {
             ctx.beginPath();
             ctx.moveTo(pts[i].x, pts[i].y);
             ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.strokeStyle = t.accent + "14"; // ~8% opacity hex
+            ctx.strokeStyle = t.accent + "21"; // ~8% opacity hex
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -279,8 +280,8 @@ const SKILLS_DATA = [
   {
     category: "Programming Languages", Icon: Terminal,
     items: [
-      { name: "Python", level: 5 }, { name: "Java", level: 4 },
-      { name: "C++", level: 3 }, { name: "C", level: 3 }, { name: "SQL", level: 3 },
+      { name: "Python", level: 5 }, { name: "Java", level: 5 },
+      { name: "C++", level: 3 }, { name: "C", level: 3 }, { name: "SQL", level: 4 },
       { name: "Problem Solving", level: 4 },
     ],
   },
@@ -296,16 +297,16 @@ const SKILLS_DATA = [
   {
     category: "AI / ML Domains", Icon: Zap,
     items: [
-      { name: "Machine Learning", level: 4 }, { name: "Deep Learning", level: 4 },
-      { name: "Computer Vision", level: 4 }, { name: "NLP", level: 3 },
+      { name: "Machine Learning", level: 5 }, { name: "Deep Learning", level: 4 },
+      { name: "Computer Vision", level: 4 }, { name: "NLP", level: 4 },
       { name: "Generative AI", level: 3 }, { name: "Cloud Computing (Azure)", level: 3 },
     ],
   },
   {
     category: "Tools & Platforms", Icon: Database,
     items: [
-      { name: "Git / GitHub", level: 4 }, { name: "Jupyter Notebook", level: 5 },
-      { name: "PyCharm", level: 4 }, { name: "Arduino IDE", level: 3 },
+      { name: "Git / GitHub", level: 5 }, { name: "Jupyter Notebook", level: 5 },
+      { name: "PyCharm", level: 4 }, { name: "Arduino IDE", level: 4 },
       { name: "OpenAI API", level: 3 }, { name: "Supabase", level: 2 }, { name: "Netlify", level: 2 },
     ],
   },
@@ -375,10 +376,10 @@ const EXPERIENCE_DATA = [
 
 // Scored / exam-based certs (full card with score bar)
 const CERTS_SCORED = [
+  { name: "SAP Certified – Back-End Developer (ABAP Cloud)", org: "SAP SE", weeks: null, period: "June 2026 – June 2027 · 1 yr Validiti", score: null, verify: "https://www.credly.com/badges/96cfe04d-c44a-45d0-ab7b-52293a60a771", badge: "Exam Certified" },
   { name: "Natural Language Processing", org: "NPTEL", weeks: 12, period: "Jan – Apr 2026", score: 57, verify: "https://nptel.ac.in/noc/E_Certificate/NOC26CS45S105750069604840008" },
   { name: "Fundamentals of Artificial Intelligence", org: "NPTEL", weeks: 12, period: "Jul – Oct 2025", score: 63, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25GE55S125960077910799707" },
   { name: "Programming in Java", org: "NPTEL", weeks: 12, period: "Jan – Apr 2025", score: 72, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25CS57S114840034704432631" },
-  { name: "SAP Certified – Back-End Developer (ABAP Cloud)", org: "SAP SE", weeks: null, period: "June 2026 – June 2027 · 1 yr Validiti", score: null, verify: "https://www.credly.com/badges/96cfe04d-c44a-45d0-ab7b-52293a60a771", badge: "Exam Certified" },
 ];
 
 // Quick course completions (chip/tag layout — no score)
