@@ -347,7 +347,7 @@ const PROJECTS_DATA = [
   {
     title: 'AI Portfolio — Interactive Glass UI',
     badge: 'Live', badgeColor: '#22c55e',
-    role: 'Full-Stack Developer', period: '2025 — Present',
+    role: 'Full-Stack Developer', period: '2026 — Present',
     description: 'A modern glass-morphism portfolio built with React, featuring particle animations, 3D tilt cards, swipe navigation, and dual themes.',
     techStack: ['React', 'Vite', 'CSS Glass', 'Lucide Icons', 'Vercel'],
     features: [
@@ -358,6 +358,22 @@ const PROJECTS_DATA = [
     category: ['Web-App'],
     github: 'https://github.com/Gocodein/portfolio',
     demo: 'https://portfolio-lac-eta-23.vercel.app/',
+  },
+  {
+    title: 'JIVAN — Rescue Drone AI',
+    badge: 'In Progress', badgeColor: '#f59e0b',
+    role: 'AI Developer', period: 'Jul 2026 — Present',
+    description: 'An AI-powered rescue-drone system that analyzes live FPV or mobile camera footage to detect trapped victims and produce a reviewable victim list for emergency rescue teams.',
+    techStack: ['Python', 'ONNX', 'YOLO', 'OpenCV', 'Flask', 'JavaScript', 'FPV Camera', 'Mobile Camera'],
+    features: [
+      'Real-time victim detection via FPV drone camera or mobile camera feed with bounding boxes and confidence scores',
+      'ONNX-based person detector with cross-frame tracking IDs and operator confirmation workflow',
+      'Built-in data collection pipeline — frame export, YOLO label export, and detection report generation for model fine-tuning',
+      'Responsive browser UI for desktop and mobile with live overlay drawing and victim list management',
+    ],
+    category: ['ML-DL', 'Web-App'],
+    github: 'https://github.com/Gocodein/jivan',
+    demo: null,
   },
 ];
 
@@ -544,7 +560,7 @@ function Overview({ t }) {
                   padding: "10px 0 4px", borderTop: `1px solid ${t.border}`,
                 }}>
                   {[
-                    { v: "3+", l: "Projects" },
+                    { v: "4", l: "Projects" },
                     { v: "1", l: "Interns" },
                     { v: "1", l: "Patent" },
                   ].map(s => (
