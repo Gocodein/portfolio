@@ -5,7 +5,6 @@ import {
   ChevronDown, ChevronRight, Copy, Check, ExternalLink,
   Award, Calendar, Terminal, Database, Cpu, ChevronLeft,
   Menu, X, Eye, Download,
-  Train,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────
@@ -316,14 +315,14 @@ const PROJECTS_DATA = [
   {
     title: "Arachnid — Bio-Inspired Spider",
     badge: "Patented", badgeColor: "#c9a646",
-    role: "AI Developer & Circuit Connection", period: "2023 — 1 Aug 2025",
+    role: "AI Developer & Circuit Connection", period: "Aug 2025",
     patentNo: "202531071175 A",
     description: "A bio-inspired robotic spider using computer vision and deep learning to track endangered species in their natural habitat.",
     techStack: ["Python", "OpenCV", "TensorFlow", "Deep Learning", "Arduino Mega", "Raspberry Pi 4", "Pi Camera", "IoT"],
     features: [
-      "Computer vision with OpenCV to track animals at risk of extinction in real-time",
-      "Data cleaning & pattern detection pipeline for continuous model retraining",
-      "IoT device integration across Arduino Mega, Raspberry Pi 4, and Pi Camera",
+      "Computer vision via OpenCV & deep learning achieving 82% detection accuracy on endangered species",
+      "Processed 15 GB+ of raw habitat data, retraining models to boost predictive accuracy by 11%",
+      "Seamless IoT integration (Arduino Mega, Raspberry Pi 4, Pi Cam) with under 250ms video latency",
     ],
     category: ['ML-DL', 'Hardware/IoT'],
     github: 'https://github.com/Gocodein/spidy.git',
@@ -336,8 +335,8 @@ const PROJECTS_DATA = [
     description: "IoT-enabled solution tracking eating behaviors via smart plates and utensils to detect patterns linked to eating disorders.",
     techStack: ["Python", "IoT Sensors", "scikit-learn", "Pandas", "Flask", "Data Analysis", "AI / ML"],
     features: [
-      "Smart plate & utensil sensors monitoring food intake, chewing speed, and meal duration",
-      "AI algorithms detecting behavioral patterns associated with anorexia and bulimia",
+      "IoT-enabled smart plate & utensil sensors monitoring food intake, chewing speed, and meal duration",
+      "ML algorithms detecting eating disorder patterns (anorexia, bulimia) with 85% precision",
       "Real-time analytics dashboard for health practitioners and caregivers",
     ],
     category: ['ML-DL', 'Hardware/IoT', 'Web-App'],
@@ -425,22 +424,77 @@ const NAV = [
 const NAV_IDS = NAV.map(n => n.id);
 
 // ─────────────────────────────────────────────
-// MICRO COMPONENTS
+// TYPING ANIMATION
 // ─────────────────────────────────────────────
-function Dots({ level, t }) {
+const TYPING_PREFIX = "I build ";
+const TYPING_STRINGS = [
+  "AI that protects endangered wildlife.",
+  "rescue drones to find trapped victims.",
+  "smart health monitors for eating disorders.",
+  "computer vision with 82% field accuracy.",
+  "IoT systems from Arduino to Raspberry Pi.",
+  "GenAI solutions that save 10 hrs/week.",
+];
+
+function TypingAnimation({ t }) {
+  const [stringIdx, setStringIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const current = TYPING_STRINGS[stringIdx];
+
+    if (isPaused) {
+      const pauseTimer = setTimeout(() => {
+        setIsPaused(false);
+        setIsDeleting(true);
+      }, 2200);
+      return () => clearTimeout(pauseTimer);
+    }
+
+    if (!isDeleting && charIdx === current.length) {
+      setIsPaused(true);
+      return;
+    }
+
+    if (isDeleting && charIdx === 0) {
+      setIsDeleting(false);
+      setStringIdx((prev) => (prev + 1) % TYPING_STRINGS.length);
+      return;
+    }
+
+    const speed = isDeleting ? 28 : 55 + Math.random() * 35;
+    const timer = setTimeout(() => {
+      setCharIdx((prev) => prev + (isDeleting ? -1 : 1));
+    }, speed);
+
+    return () => clearTimeout(timer);
+  }, [charIdx, isDeleting, isPaused, stringIdx]);
+
+  const displayed = TYPING_STRINGS[stringIdx].substring(0, charIdx);
+
   return (
-    <div style={{ display: "flex", gap: 5 }}>
-      {[1,2,3,4,5].map(i => (
-        <div key={i} style={{
-          width: 9, height: 9, borderRadius: "50%",
-          background: i <= level ? `linear-gradient(135deg, ${t.gold}, ${t.goldLight})` : t.dotEmpty,
-          transition: "background .3s, box-shadow .3s",
-          boxShadow: i <= level ? `0 0 6px ${t.gold}44` : "none",
-        }} />
-      ))}
-    </div>
+    <span style={{
+      fontFamily: "'JetBrains Mono', monospace",
+      fontSize: "inherit", fontWeight: "inherit", letterSpacing: "inherit",
+    }}>
+      <span style={{ color: t.textMuted }}>{TYPING_PREFIX}</span>
+      <span style={{ color: t.accent }}>{displayed}</span>
+      <span style={{
+        display: "inline-block", width: 2, height: "1.1em",
+        marginLeft: 1, background: t.accent,
+        verticalAlign: "text-bottom",
+        animation: "cursorBlink 0.75s step-end infinite",
+      }} />
+    </span>
   );
 }
+
+// ─────────────────────────────────────────────
+// MICRO COMPONENTS
+// ─────────────────────────────────────────────
+// (Dots component removed — Skills now uses tag chips)
 
 function Tag({ label, t }) {
   return (
@@ -477,7 +531,7 @@ function GlassCard({ children, t, style = {}, className = "" }) {
       background: `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
       border: `1px solid ${t.border}`,
       borderTop: `1px solid ${t.glassHighlight}`,
-      borderRadius: 18, padding: 20,
+      borderRadius: 18, padding: 20, overflow: "hidden", minWidth: 0, wordBreak: "break-word",
       backdropFilter: "blur(28px) saturate(1.6)",
       WebkitBackdropFilter: "blur(28px) saturate(1.6)",
       boxShadow: `inset 0 1px 0 0 ${t.glassHighlight}, inset 0 0 30px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)`,
@@ -519,11 +573,11 @@ function Overview({ t }) {
             onMouseMove={handleMouse}
             onMouseLeave={resetTilt}
             style={{
-              perspective: 600, flexShrink: 0,
+              perspective: 600, flexShrink: 1, minWidth: 160, maxWidth: 240, width: "100%",
             }}
           >
             <div style={{
-              width: 240, borderRadius: 22, overflow: "hidden",
+              width: "100%", maxWidth: 240, borderRadius: 22, overflow: "hidden",
               transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
               transition: "transform 0.15s ease-out",
               background: `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
@@ -543,7 +597,7 @@ function Overview({ t }) {
               <img
                 src="/profile.png"
                 alt="Sagar Shaw"
-                style={{ width: "100%", height: 270, objectFit: "cover", objectPosition: "center 20%", display: "block" }}
+                style={{ width: "100%", aspectRatio: "240/270", objectFit: "cover", objectPosition: "center 20%", display: "block" }}
               />
               <div style={{ padding: "14px 16px 16px" }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 12 }}>
@@ -575,8 +629,8 @@ function Overview({ t }) {
           </div>
 
           <div style={{ flex: 1, minWidth: 220 }}>
-            <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.gold, letterSpacing: 3, textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>
-              AI/ML Engineer · CSE(AIML) Student · Indian Citizen
+            <div style={{ fontSize: 13, fontFamily: "'JetBrains Mono', monospace", letterSpacing: 0.5, marginBottom: 8, fontWeight: 500, minHeight: 20 }}>
+              <TypingAnimation t={t} />
             </div>
             <h1 style={{
               fontSize: "2.5rem", fontWeight: 900, margin: "0 0 10px", lineHeight: 1.1,
@@ -620,7 +674,7 @@ function Overview({ t }) {
       </RevealOnMount>
 
       <RevealOnMount delay={150}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12, marginBottom: 18 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: 12, marginBottom: 18 }}>
           {stats.map((s) => (
             <GlassCard key={s.label} t={t} style={{ padding: "18px 16px" }}>
               <div style={{
@@ -1182,7 +1236,7 @@ export default function App() {
   const [showHint, setShowHint] = useState(true);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const touchRef = useRef({ startX: 0, startY: 0, dragging: false });
   const mainRef = useRef(null);
@@ -1198,7 +1252,7 @@ export default function App() {
   // Responsive breakpoint
   useEffect(() => {
     const onResize = () => {
-      const mobile = window.innerWidth < 768;
+      const mobile = window.innerWidth < 1024;
       setIsMobile(mobile);
       if (!mobile) setSidebarOpen(false);
     };
@@ -1321,6 +1375,7 @@ export default function App() {
         @keyframes orbFloat4 { 0%,100% { transform:translate(0,0) scale(1); } 50% { transform:translate(-20px,-40px) scale(1.06); } }
         @keyframes fadeHint { 0% { opacity:0; } 12% { opacity:0.6; } 75% { opacity:0.6; } 100% { opacity:0; } }
         @keyframes pulseDot { 0%,100% { opacity:1; box-shadow:0 0 0 0 #22c55e88; } 50% { opacity:.7; box-shadow:0 0 0 5px #22c55e00; } }
+        @keyframes cursorBlink { 0%,50% { opacity:1; } 51%,100% { opacity:0; } }
         @keyframes barGrow { from { transform:scaleY(0); } to { transform:scaleY(1); } }
         @keyframes progressFill { from { width:0; } }
         @keyframes snapBack { from { transform:translateX(var(--drag-offset, 0px)); } to { transform:translateX(0); } }
@@ -1395,12 +1450,12 @@ export default function App() {
 
         .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:99; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
 
-        @media (max-width:767px) {
+        @media (max-width:1023px) {
           .mobile-header { display:flex !important; }
           .desktop-sidebar { transform:translateX(-100%); transition:transform 0.3s cubic-bezier(.4,0,.2,1); }
           .desktop-sidebar.open { transform:translateX(0); }
         }
-        @media (min-width:768px) {
+        @media (min-width:1024px) {
           .mobile-header { display:none !important; }
           .desktop-sidebar { transform:translateX(0) !important; }
         }
@@ -1571,7 +1626,8 @@ export default function App() {
           flex: 1, marginLeft: isMobile ? 0 : 222,
           paddingTop: isMobile ? 72 : 36,
           padding: isMobile ? "72px 16px 90px" : "36px 42px 80px",
-          overflowY: "auto", minHeight: "100vh", position: "relative", zIndex: 1,
+          overflowY: "auto", overflowX: "hidden", minHeight: "100vh", minWidth: 0,
+          position: "relative", zIndex: 1,
           cursor: isDragging ? "grabbing" : "default",
         }}
         onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
