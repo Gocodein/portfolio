@@ -93,6 +93,169 @@ function ParticleCanvas({ t }) {
   );
 }
 
+/* ImageParticleCanvas ─ Photorealistic interactive image particles */
+function ImageParticleCanvas({ src = "/profile1.png", t }) {
+  const canvasRef = useRef(null);
+  const mouseRef = useRef({ x: -1000, y: -1000 });
+  const isHoverRef = useRef(false);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = src;
+
+    let animId;
+    let particles = [];
+
+    img.onload = () => {
+      const w = (canvas.width = 240);
+      const h = (canvas.height = 270);
+
+      // Draw source image scaled to cover (crop center for 240x270 from square)
+      const offC = document.createElement("canvas");
+      offC.width = w;
+      offC.height = h;
+      const offCtx = offC.getContext("2d");
+
+      // Cover-fit: scale and center-crop the square image into 240x270
+      const imgAspect = img.width / img.height;
+      const canvasAspect = w / h;
+      let sx, sy, sw, sh;
+      if (imgAspect > canvasAspect) {
+        sh = img.height;
+        sw = sh * canvasAspect;
+        sx = (img.width - sw) / 2;
+        sy = 0;
+      } else {
+        sw = img.width;
+        sh = sw / canvasAspect;
+        sx = 0;
+        sy = (img.height - sh) * 0.25; // Bias toward top (face area)
+      }
+      offCtx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+      const imgData = offCtx.getImageData(0, 0, w, h).data;
+
+      const gap = 2;
+      const pts = [];
+
+      for (let y = 0; y < h; y += gap) {
+        for (let x = 0; x < w; x += gap) {
+          const idx = (y * w + x) * 4;
+          const r = imgData[idx];
+          const g = imgData[idx + 1];
+          const b = imgData[idx + 2];
+          const a = imgData[idx + 3];
+          const brightness = (r + g + b) / 3;
+
+          if (a > 50 && brightness > 20) {
+            const size = Math.max(1.2, (brightness / 255) * gap * 0.9);
+            const isAccent = Math.random() < 0.12 && brightness > 140;
+            pts.push({
+              x, y,
+              baseX: x, baseY: y,
+              vx: 0, vy: 0,
+              size,
+              r, g, b, brightness,
+              isAccent,
+              twinkle: Math.random() * Math.PI * 2,
+            });
+          }
+        }
+      }
+      particles = pts;
+
+      const render = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        const mx = mouseRef.current.x;
+        const my = mouseRef.current.y;
+        const radius = 50;
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+
+          if (isHoverRef.current) {
+            const dx = mx - p.x;
+            const dy = my - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < radius && dist > 0) {
+              const force = (1 - dist / radius) * 6;
+              p.vx -= (dx / dist) * force;
+              p.vy -= (dy / dist) * force;
+            }
+          }
+
+          p.vx += (p.baseX - p.x) * 0.07;
+          p.vy += (p.baseY - p.y) * 0.07;
+          p.vx *= 0.85;
+          p.vy *= 0.85;
+          p.x += p.vx;
+          p.y += p.vy;
+
+          p.twinkle += 0.03;
+          const alpha = 0.6 + Math.sin(p.twinkle) * 0.4;
+          ctx.globalAlpha = alpha;
+
+          // Use original image colors for photorealistic look
+          if (p.isAccent) {
+            ctx.fillStyle = t.gold;
+          } else {
+            ctx.fillStyle = `rgb(${p.r},${p.g},${p.b})`;
+          }
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        animId = requestAnimationFrame(render);
+      };
+
+      render();
+    };
+
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = {
+        x: (e.clientX - rect.left) * (canvas.width / rect.width),
+        y: (e.clientY - rect.top) * (canvas.height / rect.height),
+      };
+    };
+    const handleMouseEnter = () => { isHoverRef.current = true; };
+    const handleMouseLeave = () => { isHoverRef.current = false; mouseRef.current = { x: -1000, y: -1000 }; };
+
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseenter", handleMouseEnter);
+    canvas.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      if (animId) cancelAnimationFrame(animId);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseenter", handleMouseEnter);
+      canvas.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [src, t]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        width: "100%",
+        aspectRatio: "240/270",
+        borderRadius: "22px 22px 0 0",
+        background: "rgba(0,0,0,0.35)",
+        display: "block",
+        cursor: "crosshair",
+      }}
+    />
+  );
+}
+
 /* CustomCursor ─ circle-follower cursor for desktop */
 function CustomCursor({ t }) {
   const outerRef = useRef(null);
@@ -528,6 +691,7 @@ function PageTitle({ children, t, num }) {
 function GlassCard({ children, t, style = {}, className = "" }) {
   return (
     <div className={`card-hover glass-card ${className}`} style={{
+      position: "relative",
       background: `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
       border: `1px solid ${t.border}`,
       borderTop: `1px solid ${t.glassHighlight}`,
@@ -536,7 +700,16 @@ function GlassCard({ children, t, style = {}, className = "" }) {
       WebkitBackdropFilter: "blur(28px) saturate(1.6)",
       boxShadow: `inset 0 1px 0 0 ${t.glassHighlight}, inset 0 0 30px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)`,
       ...style,
-    }}>{children}</div>
+    }}>
+      {children}
+      {/* Bottom accent line — reveals on hover */}
+      <div className="card-accent-line" style={{
+        position: "absolute", bottom: 0, left: 0, right: 0, height: 2,
+        background: `linear-gradient(90deg, ${t.accent}, ${t.gold})`,
+        transform: "scaleX(0)", transformOrigin: "left",
+        transition: "transform 0.4s cubic-bezier(.4,0,.2,1)",
+      }} />
+    </div>
   );
 }
 
@@ -553,9 +726,10 @@ function Overview({ t }) {
   ];
   const cardRef = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [cardMode, setCardMode] = useState("photo");
 
   const handleMouse = (e) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || cardMode === "particle") return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 14;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * -14;
@@ -588,17 +762,38 @@ function Overview({ t }) {
               boxShadow: `0 20px 60px rgba(0,0,0,0.25), inset 0 1px 0 ${t.glassHighlight}, 0 0 50px ${t.accent}18`,
               position: "relative",
             }}>
+              {/* Mode toggle button */}
+              <button
+                onClick={(e) => { e.stopPropagation(); setCardMode(m => m === "photo" ? "particle" : "photo"); }}
+                title="Toggle Interactive Particle Mode"
+                style={{
+                  position: "absolute", top: 10, right: 10, zIndex: 10,
+                  fontSize: 9, fontFamily: "'JetBrains Mono', monospace",
+                  padding: "3px 8px", borderRadius: 999,
+                  background: "rgba(0,0,0,0.65)", color: t.gold,
+                  border: `1px solid ${t.gold}55`, backdropFilter: "blur(8px)",
+                  cursor: "pointer", display: "flex", alignItems: "center", gap: 3,
+                  transition: "all 0.2s ease"
+                }}
+              >
+                {cardMode === "photo" ? "✦ Particles" : "📷 Photo"}
+              </button>
+
               {/* Shine effect */}
               <div style={{
                 position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
                 background: `linear-gradient(${105 + tilt.x * 3}deg, transparent 30%, ${t.glassHighlight} 50%, transparent 70%)`,
                 opacity: 0.5,
               }} />
-              <img
-                src="/profile.png"
-                alt="Sagar Shaw"
-                style={{ width: "100%", aspectRatio: "240/270", objectFit: "cover", objectPosition: "center 20%", display: "block" }}
-              />
+              {cardMode === "photo" ? (
+                <img
+                  src="/profile1.png"
+                  alt="Sagar Shaw"
+                  style={{ width: "100%", aspectRatio: "240/270", objectFit: "cover", objectPosition: "center 15%", display: "block" }}
+                />
+              ) : (
+                <ImageParticleCanvas src="/profile1.png" t={t} />
+              )}
               <div style={{ padding: "14px 16px 16px" }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 12 }}>
                   {["AI/ML", "Computer Vision", "IoT", "GenAI", "Deep Learning"].map(tag => (
@@ -712,7 +907,8 @@ function About({ t }) {
   return (
     <div>
       <PageTitle t={t} num="01">About Me</PageTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,280px)", gap: 20, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,280px)", gap: 20, alignItems: "start" }}
+        className="about-grid">
         <div>
           {[
             "I'm a Computer Science Engineering student specializing in AI & ML at JIS College of Engineering, Kalyani, expected to graduate in June 2027. My work spans computer vision for wildlife conservation, IoT-integrated health monitoring, and generative AI application development.",
@@ -816,6 +1012,65 @@ function About({ t }) {
           </GlassCard>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* TechMarquee ─ Infinite dual-row scrolling technology ticker (extracted from brutalist-void template) */
+function TechMarquee({ t }) {
+  const row1 = ["PYTHON", "OPENCV", "TENSORFLOW", "PYTORCH", "YOLO", "ROS / IOT", "REACT", "FLASK", "ABAP CLOUD", "SQL"];
+  const row2 = ["COMPUTER VISION", "GENERATIVE AI", "DEEP LEARNING", "RESCUE DRONES", "HEALTH MONITORING", "EMBEDDED IOT", "PATENTED ROBOTICS"];
+
+  const renderRow = (items, direction) => {
+    const list = [...items, ...items, ...items, ...items];
+    return (
+      <div style={{ overflow: "hidden", padding: "6px 0", whiteSpace: "nowrap" }}>
+        <div style={{
+          display: "inline-flex",
+          gap: 20,
+          animation: `${direction === "left" ? "marqueeLeft" : "marqueeRight"} 28s linear infinite`,
+        }}>
+          {list.map((item, idx) => (
+            <span
+              key={idx}
+              style={{
+                fontSize: "1.4rem",
+                fontWeight: 800,
+                fontFamily: "'Outfit', sans-serif",
+                letterSpacing: "0.04em",
+                color: "transparent",
+                WebkitTextStroke: `1px ${t.border}`,
+                transition: "all 0.3s ease",
+                cursor: "default",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 16,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = t.gold;
+                e.currentTarget.style.WebkitTextStroke = "none";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "transparent";
+                e.currentTarget.style.WebkitTextStroke = `1px ${t.border}`;
+              }}
+            >
+              {item}
+              <span style={{ color: t.textMuted, opacity: 0.3, fontSize: "0.9rem" }}>•</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ marginTop: 24, padding: "16px 0", borderTop: `1px solid ${t.border}`, borderBottom: `1px solid ${t.border}` }}>
+      <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.gold, letterSpacing: 2, marginBottom: 10, fontWeight: 600, textTransform: "uppercase" }}>
+        03 — Tech Arsenal
+      </div>
+      {renderRow(row1, "left")}
+      {renderRow(row2, "right")}
     </div>
   );
 }
@@ -931,7 +1186,7 @@ function Skills({ t }) {
   return (
     <div>
       <PageTitle t={t} num="03">Tech Stack</PageTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}>
         {SKILLS_DATA.map(({ category, Icon, items }) => (
           <GlassCard key={category} t={t}>
             <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 16 }}>
@@ -967,6 +1222,7 @@ function Skills({ t }) {
           </GlassCard>
         ))}
       </div>
+      <TechMarquee t={t} />
     </div>
   );
 }
@@ -1150,7 +1406,7 @@ function Contact({ t }) {
   return (
     <div>
       <PageTitle t={t} num="06">Get In Touch</PageTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10, marginBottom: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: 10, marginBottom: 18 }}>
         {avail.map(a => (
           <GlassCard key={a.label} t={t} style={{ padding: "14px 10px", textAlign: "center" }}>
             <div style={{ fontSize: 15, fontWeight: 700, color: a.c, fontFamily: "'Outfit', sans-serif" }}>{a.label}</div>
@@ -1159,7 +1415,7 @@ function Contact({ t }) {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}>
         {/* Info */}
         <GlassCard t={t}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 15, color: t.accentSub, fontSize: 13, fontWeight: 600 }}>
@@ -1376,6 +1632,8 @@ export default function App() {
         @keyframes fadeHint { 0% { opacity:0; } 12% { opacity:0.6; } 75% { opacity:0.6; } 100% { opacity:0; } }
         @keyframes pulseDot { 0%,100% { opacity:1; box-shadow:0 0 0 0 #22c55e88; } 50% { opacity:.7; box-shadow:0 0 0 5px #22c55e00; } }
         @keyframes cursorBlink { 0%,50% { opacity:1; } 51%,100% { opacity:0; } }
+        @keyframes marqueeLeft { 0% { transform: translateX(0%); } 100% { transform: translateX(-25%); } }
+        @keyframes marqueeRight { 0% { transform: translateX(-25%); } 100% { transform: translateX(0%); } }
         @keyframes barGrow { from { transform:scaleY(0); } to { transform:scaleY(1); } }
         @keyframes progressFill { from { width:0; } }
         @keyframes snapBack { from { transform:translateX(var(--drag-offset, 0px)); } to { transform:translateX(0); } }
@@ -1455,6 +1713,9 @@ export default function App() {
           .desktop-sidebar { transform:translateX(-100%); transition:transform 0.3s cubic-bezier(.4,0,.2,1); }
           .desktop-sidebar.open { transform:translateX(0); }
         }
+        @media (max-width:640px) {
+          .about-grid { grid-template-columns:1fr !important; }
+        }
         @media (min-width:1024px) {
           .mobile-header { display:none !important; }
           .desktop-sidebar { transform:translateX(0) !important; }
@@ -1524,7 +1785,7 @@ export default function App() {
             width: 28, height: 28, borderRadius: 7, padding: 1.5, overflow: "hidden",
             background: `linear-gradient(135deg, ${t.accent}, ${t.gold})`,
           }}>
-            <img src="/profile.png" alt="SS" style={{ width: "100%", height: "100%", borderRadius: 5.5, objectFit: "cover", objectPosition: "center 20%", display: "block" }} />
+            <img src="/profile1.png" alt="SS" style={{ width: "100%", height: "100%", borderRadius: 5.5, objectFit: "cover", objectPosition: "center 15%", display: "block" }} />
           </div>
           <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Outfit', sans-serif", color: t.text }}>Sagar Shaw</span>
         </div>
@@ -1564,11 +1825,11 @@ export default function App() {
               overflow: "hidden",
             }}>
               <img
-                src="/profile.png"
+                src="/profile1.png"
                 alt="Sagar Shaw"
                 style={{
                   width: "100%", height: "100%", borderRadius: 8,
-                  objectFit: "cover", objectPosition: "center 20%", display: "block",
+                  objectFit: "cover", objectPosition: "center 15%", display: "block",
                 }}
               />
             </div>
