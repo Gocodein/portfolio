@@ -570,7 +570,7 @@ const CERTS_COURSES = [
 
 const LEADERSHIP_DATA = [
   { role: "AICTE Idea Lab Ambassador — IoT & 3D Modelling Lead", org: "AICTE Idea Lab · Kalyani", period: "May 2024 – Present" },
-  { role: "Co-founder & Member", org: "The Risers · Kalyani", period: "Dec 2023 – Present" },
+  { role: "Core Team Member", org: "Risers Cre8 · Kalyani", period: "Dec 2023 – Present" },
   { role: "Event Organiser — InnovoCon 2025", org: "12-hour 3D Modelling Hackathon", period: "27–28 Feb 2025" },
 ];
 
@@ -913,7 +913,7 @@ function About({ t }) {
           {[
             "I'm a Computer Science Engineering student specializing in AI & ML at JIS College of Engineering, Kalyani, expected to graduate in June 2027. My work spans computer vision for wildlife conservation, IoT-integrated health monitoring, and generative AI application development.",
             "I hold a patent for Arachnid — a bio-inspired robotic system using computer vision and deep learning to track endangered species in natural habitats. I also lead IntelliEat, an IoT-enabled system that applies AI to detect behavioral patterns linked to eating disorders.",
-            "I bring hands-on industry experience from my AI/ML internship at Confitech Solutions, building GenAI-powered applications with OpenAI and Azure. Beyond engineering, I serve as an AICTE Idea Lab Ambassador and co-founded The Risers student community.",
+            "I bring hands-on industry experience from my AI/ML internship at Confitech Solutions, building GenAI-powered applications with OpenAI and Azure. Beyond engineering, I serve as an AICTE Idea Lab Ambassador and co-founded Risers Cre8 (formerly The Risers).",
           ].map((p, i) => <p key={i} style={{ color: t.textSub, fontSize: 14, lineHeight: 1.85, marginBottom: 14, fontFamily: "'Outfit', sans-serif" }}>{p}</p>)}
 
           <div style={{ marginTop: 24 }}>
