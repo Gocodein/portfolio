@@ -570,7 +570,7 @@ const CERTS_COURSES = [
 
 const LEADERSHIP_DATA = [
   { role: "AICTE Idea Lab Ambassador — IoT & 3D Modelling Lead", org: "AICTE Idea Lab · Kalyani", period: "May 2024 – Present" },
-  { role: "Core Team Member", org: "Risers Cre8 · Kalyani", period: "Dec 2023 – Present" },
+  { role: "Core Team Member", org: "Risers Cre8", period: "Dec 2023 – Present" },
   { role: "Event Organiser — InnovoCon 2025", org: "12-hour 3D Modelling Hackathon", period: "27–28 Feb 2025" },
 ];
 
