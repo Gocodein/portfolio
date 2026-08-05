@@ -4,7 +4,9 @@ import {
   Moon, Sun, GitBranch, Phone, MapPin,
   ChevronDown, ChevronRight, Copy, Check, ExternalLink,
   Award, Calendar, Terminal, Database, Cpu, ChevronLeft,
-  Menu, X, Eye, Download,
+  Menu, X, Eye, Download, Users, Flame, Rocket, Sparkles, Layers,
+  Drone,
+  LucideDrone,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────
@@ -580,6 +582,7 @@ const NAV = [
   { id: "projects", label: "Projects", Icon: Code },
   { id: "skills", label: "Skills & Tools", Icon: Zap },
   { id: "experience", label: "Experience", Icon: Briefcase },
+  { id: "initiatives", label: "Focus & Events", Icon: Rocket },
   { id: "certifications", label: "Certifications", Icon: GraduationCap },
   { id: "contact", label: "Contact", Icon: Mail },
 ];
@@ -1266,12 +1269,233 @@ function Experience({ t }) {
 }
 
 // ─────────────────────────────────────────────
+// INITIATIVES & EVENTS
+// ─────────────────────────────────────────────
+function Initiatives({ t }) {
+  const currentFocus = [
+    {
+      title: "Rescue Drone Vision (JIVAN)",
+      status: "Active R&D",
+      statusColor: "#f59e0b",
+      Icon: Drone,
+      desc: "Optimizing real-time person detection algorithms with ONNX & YOLO for low-latency FPV drone cameras and search-and-rescue operator interfaces.",
+      tags: ["Computer Vision", "YOLO", "ONNX", "Disaster Tech"],
+    },
+    {
+      title: "Bio-Robotics Telemetry (Arachnid)",
+      status: "Patented & Scaling",
+      statusColor: t.gold,
+      Icon: Cpu,
+      desc: "Advancing multi-sensor telemetry and kinematic gait control for bio-inspired quad/hex walking robotics designed for habitat surveillance.",
+      tags: ["Deep Learning", "Arduino Mega", "Raspberry Pi", "Kinematics"],
+    },
+    {
+      title: "Risers Cre8 Ecosystem",
+      status: "Core Initiative",
+      statusColor: t.accent,
+      Icon: Users,
+      desc: "Core Member and driving hardware/software project atelier, developer workshops, and tech product bundles for student innovators.",
+      tags: ["Startup", "Hardware & IoT", "Mentorship", "Community"],
+    },
+  ];
+
+  const upcomingEvents = [
+    {
+      title: "InnoVocon Season 2",
+      type: "Flagship Innovation Hackathon",
+      role: "Partnered Host (Risers Cre8)",
+      date: "Upcoming 2026",
+      location: "Partnered Hackathon Portal",
+      highlights: [
+        "Leading hackathon registration, problem statement curation, and IoT hardware kit sponsorship.",
+        "Building community outreach across regional engineering colleges.",
+      ],
+      link: "https://riserscre8.com/partnered-hackathons/innovocon-season-2",
+    },
+  ];
+
+  const completedEvents = [
+    {
+      title: "InnovoCon 2025",
+      type: "12-Hour 3D Modelling Hackathon",
+      role: "Event Organiser & Host",
+      date: "27–28 Feb 2025",
+      location: "JIS College of Engineering · Kalyani",
+      highlights: [
+        "Structured 3D CAD modeling challenges and evaluated 3D printing accuracy for participant teams.",
+        "Mentored engineering students in rapid prototyping and mechanical design principles.",
+      ],
+      link: null,
+    },
+    {
+      title: "AICTE Idea Lab Workshops",
+      type: "Technical Hands-on Sessions",
+      role: "IoT & 3D Modelling Lead",
+      date: "May 2025 – June 2025",
+      location: "AICTE Idea Lab · Kalyani",
+      highlights: [
+        "Conducting practical workshops on ESP32/Raspberry Pi embedded systems and sensor interfacing.",
+        "Guiding students from conceptual 3D CAD design to physical additive manufacturing.",
+      ],
+      link: null,
+    },
+  ];
+
+  return (
+    <div>
+      <PageTitle t={t} num="05">Focus & Events</PageTitle>
+
+      {/* ── CURRENT FOCUS ── */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub, textTransform: "uppercase", letterSpacing: 2, marginBottom: 14, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+          <Flame size={12} color={t.accentSub} /> Current Technical Focus
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}>
+          {currentFocus.map((f, i) => (
+            <GlassCard key={i} t={t}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 10,
+                    background: `linear-gradient(135deg, ${t.accent}22, ${t.accentSub}11)`,
+                    border: `1px solid ${t.accent}33`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <f.Icon size={15} color={t.accentSub} />
+                  </div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{f.title}</div>
+                </div>
+              </div>
+              <div style={{ marginBottom: 10 }}>
+                <span style={{
+                  display: "inline-block", padding: "2px 9px", borderRadius: 999, fontSize: 10, fontWeight: 600,
+                  background: `${f.statusColor}18`, color: f.statusColor, border: `1px solid ${f.statusColor}44`,
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}>{f.status}</span>
+              </div>
+              <p style={{ fontSize: 13, color: t.textSub, lineHeight: 1.6, marginBottom: 12, fontFamily: "'Outfit', sans-serif" }}>
+                {f.desc}
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {f.tags.map(tag => <Tag key={tag} label={tag} t={t} />)}
+              </div>
+            </GlassCard>
+          ))}
+        </div>
+      </div>
+
+      {/* ── UPCOMING EVENT & COMMUNITY ── */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.gold, textTransform: "uppercase", letterSpacing: 2, marginBottom: 14, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+          <Sparkles size={12} color={t.gold} /> UPCOMING EVENT & COMMUNITY
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {upcomingEvents.map((ev, i) => (
+            <GlassCard key={i} t={t} style={{ position: "relative" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{ev.title}</div>
+                  <div style={{ fontSize: 12, color: t.accentSub, fontWeight: 600, marginTop: 2 }}>{ev.type} · <span style={{ color: t.textMuted, fontWeight: 400 }}>{ev.role}</span></div>
+                </div>
+                <div style={{ fontSize: 11, color: t.textMuted, fontFamily: "'JetBrains Mono', monospace", display: "flex", alignItems: "center", gap: 4 }}>
+                  <Calendar size={11} />{ev.date}
+                </div>
+              </div>
+              <div style={{ fontSize: 11, color: t.textMuted, marginBottom: 10, display: "flex", alignItems: "center", gap: 4 }}>
+                <MapPin size={11} color={t.gold} />{ev.location}
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                {ev.highlights.map((h, j) => (
+                  <div key={j} style={{ display: "flex", gap: 8, marginBottom: 6, fontSize: 13, color: t.textSub, lineHeight: 1.5 }}>
+                    <span style={{ color: t.gold, flexShrink: 0, marginTop: 2 }}>◦</span>{h}
+                  </div>
+                ))}
+              </div>
+              {ev.link && (
+                <a href={ev.link} target="_blank" rel="noopener noreferrer" className="link-hover" style={{
+                  display: "inline-flex", alignItems: "center", gap: 5, padding: "6px 14px", borderRadius: 8,
+                  fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub,
+                  background: t.surface, border: `1px solid ${t.border}`, textDecoration: "none",
+                }}>
+                  <ExternalLink size={11} /> Event Page
+                </a>
+              )}
+            </GlassCard>
+          ))}
+        </div>
+      </div>
+
+      {/* ── ORGANIZATIONAL SPOTLIGHT ── */}
+      <GlassCard t={t} style={{ padding: "20px 22px", marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <Users size={16} color={t.accentSub} />
+          <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>Risers Cre8 — Core Team & Organization</div>
+        </div>
+        <p style={{ color: t.textSub, fontSize: 13, lineHeight: 1.8, marginBottom: 14, fontFamily: "'Outfit', sans-serif" }}>
+          As a  Core Team Member at <strong>Risers Cre8</strong>, I collaborate with fellow engineers to build open-source robotics, hardware development boards, IoT sensor modules, and planing to host regional hackathons. We aim to empower student innovators by bridging academic theory with real-world prototyping.
+        </p>
+        <a href="https://riserscre8.com" target="_blank" rel="noopener noreferrer" className="link-hover" style={{
+          display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 10,
+          fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: t.accent,
+          background: `linear-gradient(135deg, ${t.accent}15, ${t.accentSub}08)`,
+          border: `1px solid ${t.accent}44`, textDecoration: "none", fontWeight: 600,
+        }}>
+          <ExternalLink size={13} /> Visit Risers Cre8 Platform
+        </a>
+      </GlassCard>
+
+      {/* ── COMPLETED EVENTS ── */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub, textTransform: "uppercase", letterSpacing: 2, marginBottom: 14, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+          <Check size={12} color={t.accentSub} /> Completed Events
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {completedEvents.map((ev, i) => (
+            <GlassCard key={i} t={t} style={{ position: "relative" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{ev.title}</div>
+                  <div style={{ fontSize: 12, color: t.accentSub, fontWeight: 600, marginTop: 2 }}>{ev.type} · <span style={{ color: t.textMuted, fontWeight: 400 }}>{ev.role}</span></div>
+                </div>
+                <div style={{ fontSize: 11, color: t.textMuted, fontFamily: "'JetBrains Mono', monospace", display: "flex", alignItems: "center", gap: 4 }}>
+                  <Calendar size={11} />{ev.date}
+                </div>
+              </div>
+              <div style={{ fontSize: 11, color: t.textMuted, marginBottom: 10, display: "flex", alignItems: "center", gap: 4 }}>
+                <MapPin size={11} color={t.gold} />{ev.location}
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                {ev.highlights.map((h, j) => (
+                  <div key={j} style={{ display: "flex", gap: 8, marginBottom: 6, fontSize: 13, color: t.textSub, lineHeight: 1.5 }}>
+                    <span style={{ color: t.gold, flexShrink: 0, marginTop: 2 }}>◦</span>{h}
+                  </div>
+                ))}
+              </div>
+              {ev.link && (
+                <a href={ev.link} target="_blank" rel="noopener noreferrer" className="link-hover" style={{
+                  display: "inline-flex", alignItems: "center", gap: 5, padding: "6px 14px", borderRadius: 8,
+                  fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub,
+                  background: t.surface, border: `1px solid ${t.border}`, textDecoration: "none",
+                }}>
+                  <ExternalLink size={11} /> Event Page
+                </a>
+              )}
+            </GlassCard>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
 // CERTIFICATIONS
 // ─────────────────────────────────────────────
 function Certifications({ t }) {
   return (
     <div>
-      <PageTitle t={t} num="05">Certifications</PageTitle>
+      <PageTitle t={t} num="06">Certifications</PageTitle>
 
       {/* ── SCORED / EXAM CERTS ── */}
       <div style={{ display: "flex", flexDirection: "column", gap: 13, marginBottom: 20 }}>
@@ -1405,7 +1629,7 @@ function Contact({ t }) {
 
   return (
     <div>
-      <PageTitle t={t} num="06">Get In Touch</PageTitle>
+      <PageTitle t={t} num="07">Get In Touch</PageTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: 10, marginBottom: 18 }}>
         {avail.map(a => (
           <GlassCard key={a.label} t={t} style={{ padding: "14px 10px", textAlign: "center" }}>
@@ -1611,6 +1835,7 @@ export default function App() {
       case "projects": return <Projects t={t} />;
       case "skills": return <Skills t={t} />;
       case "experience": return <Experience t={t} />;
+      case "initiatives": return <Initiatives t={t} />;
       case "certifications": return <Certifications t={t} />;
       case "contact": return <Contact t={t} />;
       default: return null;
