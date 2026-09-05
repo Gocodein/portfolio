@@ -497,7 +497,7 @@ const PROJECTS_DATA = [
   {
     title: "Arachnid — Bio-Inspired Spider",
     badge: "2 Patents · Live App", badgeColor: "#c9a646",
-    role: "AI Developer & Lead Engineer", period: "Aug 2025 — Present",
+    role: "AI Developer & Hardware Support Engineer", period: "Aug 2025 — Present",
     patentNo: "Design Reg. 467786-001 | App. 202531071175 A",
     description: "A bio-inspired hexapod robotic spider (HEXAPOD ROBOT) using computer vision, YOLOv8, and deep learning to track and protect 9 endangered species in their natural habitats.",
     techStack: ["Python", "PyTorch", "YOLOv8", "OpenCV", "Streamlit", "timm", "Plotly", "Arduino Mega", "Raspberry Pi 4", "IoT"],
