@@ -455,7 +455,7 @@ const SKILLS_DATA = [
       { name: "TensorFlow", level: 4 }, { name: "PyTorch", level: 3 },
       { name: "scikit-learn", level: 4 }, { name: "OpenCV", level: 4 },
       { name: "FastMCP", level: 4 }, { name: "ChromaDB", level: 4 },
-      { name: "Pandas / NumPy", level: 4 }, { name: "Flask", level: 3 },
+      { name: "Pandas / NumPy", level: 4 }, { name: "Matplotlib / Seaborn", level: 4 }, { name: "Flask", level: 3 },
     ],
   },
   {
@@ -482,10 +482,10 @@ const PROJECTS_DATA = [
     title: "Merchant AI Readability & Autonomous Commerce",
     badge: "Hackathon", badgeColor: "#c9a646",
     role: "AI Architect & Lead Engineer", period: "Sep 2026",
-    description: "An agentic financial operating system and FastMCP gateway enabling autonomous AI agents to search D2C merchant catalogs with hybrid vector retrieval and execute secure Razorpay transactions.",
+    description: "An agentic financial operating system and FastMCP gateway enabling autonomous AI agents to search D2C and SMB Indian merchants catalogs with hybrid vector retrieval and execute secure Razorpay transactions.",
     techStack: ["Python", "FastMCP", "Razorpay API", "ChromaDB", "Vector Search", "FastAPI", "Pytest", "OpenAI API"],
     features: [
-      "FastMCP & Razorpay integration transforming unstructured D2C merchant catalogs into 100% agent-readable APIs",
+      "FastMCP & Razorpay integration transforming unstructured D2C and SMB Indian merchant catalogs into 100% agent-readable APIs",
       "Hybrid search engine combining ChromaDB vector embeddings with sub-millisecond keyword fallback (0.010ms lookup)",
       "Cryptographic Payment Integrity Guard preventing price manipulation and parameter tampering during agentic checkout",
       "Built for Razorpay AI Buildathon with 100% test suite pass rate (17/17 pytest suites passing)",
@@ -497,7 +497,7 @@ const PROJECTS_DATA = [
   {
     title: "AI Engineer OS — Personal Productivity PWA",
     badge: "Live", badgeColor: "#22c55e",
-    role: "Full-Stack Developer & Architect", period: "Sep 2026 — Present",
+    role: "Full-Stack Developer & Architect", period: "June 2026 — Present",
     description: "A production-ready PWA & personal operating system engineered for AI/ML developers to manage daily routines, DSA problem solving, AI project sprints, habit streaks, and focus sessions with cross-device sync.",
     techStack: ["Next.js 16", "React 19", "TypeScript", "Prisma ORM", "Supabase PostgreSQL", "Tailwind CSS", "Auth.js v5", "PWA", "Vercel"],
     features: [
@@ -508,18 +508,19 @@ const PROJECTS_DATA = [
     ],
     category: ['Web-App', 'ML-DL'],
     github: 'https://github.com/Gocodein/daily-task-tracker',
-    demo: 'https://daily-task-tracker.vercel.app',
+    demo: 'https://daily-task-tracker-gray.vercel.app/',
   },
   {
     title: "Arachnid — Bio-Inspired Spider",
-    badge: "Patented", badgeColor: "#c9a646",
+    badge: "2 Patents", badgeColor: "#c9a646",
     role: "AI Developer & Circuit Connection", period: "Aug 2025",
-    patentNo: "202531071175 A",
-    description: "A bio-inspired robotic spider using computer vision and deep learning to track endangered species in their natural habitat.",
+    patentNo: "Design Reg. 467786-001 | App. 202531071175 A",
+    description: "A bio-inspired hexapod robotic spider using computer vision and deep learning to track endangered species in their natural habitat.",
     techStack: ["Python", "OpenCV", "TensorFlow", "Deep Learning", "Arduino Mega", "Raspberry Pi 4", "Pi Camera", "IoT"],
     features: [
+      "Official Design Patent registered (No. 467786-001, Class 15-99) by Controller General of Patents, Govt. of India",
+      "Invention Patent filed (No. 202531071175 A) for AI species detection & real-time telemetry pipeline",
       "Computer vision via OpenCV & deep learning achieving 82% detection accuracy on endangered species",
-      "Processed 15 GB+ of raw habitat data, retraining models to boost predictive accuracy by 11%",
       "Seamless IoT integration (Arduino Mega, Raspberry Pi 4, Pi Cam) with under 250ms video latency",
     ],
     category: ['ML-DL', 'Hardware/IoT'],
@@ -531,7 +532,7 @@ const PROJECTS_DATA = [
     badge: "In Progress", badgeColor: "#3b82f6",
     role: "Team Lead", period: "Aug 2024 — Present",
     description: "IoT-enabled solution tracking eating behaviors via smart plates and utensils to detect patterns linked to eating disorders.",
-    techStack: ["Python", "IoT Sensors", "scikit-learn", "Pandas", "Flask", "Data Analysis", "AI / ML"],
+    techStack: ["Python", "IoT Sensors", "scikit-learn", "Pandas", "Matplotlib / Seaborn", "Flask", "Data Analysis", "AI / ML"],
     features: [
       "IoT-enabled smart plate & utensil sensors monitoring food intake, chewing speed, and meal duration",
       "ML algorithms detecting eating disorder patterns (anorexia, bulimia) with 85% precision",
@@ -756,7 +757,7 @@ function Overview({ t }) {
   const cgpa = (SGPA_DATA.reduce((s, d) => s + d.sgpa, 0) / SGPA_DATA.length).toFixed(2);
   const stats = [
     { val: cgpa, label: "CGPA", sub: `Best SGPA: ${Math.max(...SGPA_DATA.map(d => d.sgpa))}` },
-    { val: "1", label: "Patent Filed", sub: "No. 202531071175 A" },
+    { val: "2", label: "Patents", sub: "Reg. 467786-001 & 202531071175 A" },
     { val: "1", label: "Internships", sub: "AI/ML focused" },
     { val: "7", label: "Certifications", sub: "NPTEL, SAP, IBM & more" },
   ];
@@ -845,9 +846,9 @@ function Overview({ t }) {
                   padding: "10px 0 4px", borderTop: `1px solid ${t.border}`,
                 }}>
                   {[
-                    { v: "4", l: "Projects" },
+                    { v: "6", l: "Projects" },
                     { v: "1", l: "Interns" },
-                    { v: "1", l: "Patent" },
+                    { v: "2", l: "Patents" },
                   ].map(s => (
                     <div key={s.l} style={{ textAlign: "center" }}>
                       <div style={{ fontSize: 18, fontWeight: 900, color: t.accent, fontFamily: "'Outfit', sans-serif" }}>{s.v}</div>
@@ -948,7 +949,7 @@ function About({ t }) {
         <div>
           {[
             "I'm a Computer Science Engineering student specializing in AI & ML at JIS College of Engineering, Kalyani, expected to graduate in June 2027. My work spans computer vision for wildlife conservation, IoT-integrated health monitoring, and generative AI application development.",
-            "I hold a patent for Arachnid — a bio-inspired robotic system using computer vision and deep learning to track endangered species in natural habitats. I also lead IntelliEat, an IoT-enabled system that applies AI to detect behavioral patterns linked to eating disorders.",
+            "I hold two patents (Registered Design Patent No. 467786-001 & Invention App. 202531071175 A) for Arachnid — a bio-inspired hexapod robotic system using computer vision and deep learning to track endangered species in natural habitats. I also lead IntelliEat, an IoT-enabled system that applies AI to detect behavioral patterns linked to eating disorders.",
             "I bring hands-on industry experience from my AI/ML internship at Confitech Solutions, building GenAI-powered applications with OpenAI and Azure. Beyond engineering, I serve as an AICTE Idea Lab Ambassador and co-founded Risers Cre8 (formerly The Risers).",
           ].map((p, i) => <p key={i} style={{ color: t.textSub, fontSize: 14, lineHeight: 1.85, marginBottom: 14, fontFamily: "'Outfit', sans-serif" }}>{p}</p>)}
 
@@ -972,7 +973,8 @@ function About({ t }) {
             {[
               ["Location", "Kankinara, West Bengal"], ["Email", "sagarshaw.jisce@gmail.com"],
               ["Phone", "+91 9123634756"], ["GitHub", "Gocodein"],
-              ["Patent No.", "202531071175 A"], ["Expected Grad.", "June 2027"],
+              ["Design Reg.", "467786-001 (Class 15-99)"], ["Invention App.", "202531071175 A"],
+              ["Expected Grad.", "June 2027"],
             ].map(([k, v]) => (
               <div key={k} style={{ display: "flex", gap: 8, marginBottom: 9 }}>
                 <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.textMuted, minWidth: 90, paddingTop: 1 }}>{k}</div>
