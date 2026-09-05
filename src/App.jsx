@@ -444,7 +444,7 @@ const SKILLS_DATA = [
   {
     category: "Programming Languages", Icon: Terminal,
     items: [
-      { name: "Python", level: 5 }, { name: "Java", level: 5 },
+      { name: "Python", level: 5 }, { name: "TypeScript", level: 4 }, { name: "Java", level: 5 },
       { name: "C++", level: 3 }, { name: "C", level: 3 }, { name: "SQL", level: 4 },
       { name: "Problem Solving", level: 4 },
     ],
@@ -454,29 +454,62 @@ const SKILLS_DATA = [
     items: [
       { name: "TensorFlow", level: 4 }, { name: "PyTorch", level: 3 },
       { name: "scikit-learn", level: 4 }, { name: "OpenCV", level: 4 },
-      { name: "Pandas", level: 4 }, { name: "NumPy", level: 4 },
-      { name: "Matplotlib / Seaborn", level: 4 }, { name: "Flask", level: 3 },
+      { name: "FastMCP", level: 4 }, { name: "ChromaDB", level: 4 },
+      { name: "Pandas / NumPy", level: 4 }, { name: "Flask", level: 3 },
     ],
   },
   {
     category: "AI / ML Domains", Icon: Zap,
     items: [
       { name: "Machine Learning", level: 5 }, { name: "Deep Learning", level: 4 },
-      { name: "Computer Vision", level: 4 }, { name: "NLP", level: 4 },
-      { name: "Generative AI", level: 3 }, { name: "Cloud Computing (Azure)", level: 3 },
+      { name: "Computer Vision", level: 4 }, { name: "Agentic AI & FastMCP", level: 4 },
+      { name: "NLP", level: 4 }, { name: "Generative AI", level: 3 }, { name: "Cloud (Azure/Vercel)", level: 3 },
     ],
   },
   {
     category: "Tools & Platforms", Icon: Database,
     items: [
-      { name: "Git / GitHub", level: 5 }, { name: "Jupyter Notebook", level: 5 },
-      { name: "PyCharm", level: 4 }, { name: "Arduino IDE", level: 4 },
-      { name: "OpenAI API", level: 3 }, { name: "Supabase", level: 2 }, { name: "Netlify", level: 2 },
+      { name: "Next.js 16", level: 4 }, { name: "React 19", level: 5 },
+      { name: "Git / GitHub", level: 5 }, { name: "Prisma ORM", level: 4 },
+      { name: "Supabase PostgreSQL", level: 4 }, { name: "Arduino IDE", level: 4 },
+      { name: "OpenAI API", level: 4 }, { name: "Vercel", level: 4 },
     ],
   },
 ];
 
 const PROJECTS_DATA = [
+  {
+    title: "Merchant AI Readability & Autonomous Commerce",
+    badge: "Hackathon", badgeColor: "#c9a646",
+    role: "AI Architect & Lead Engineer", period: "Sep 2026",
+    description: "An agentic financial operating system and FastMCP gateway enabling autonomous AI agents to search D2C merchant catalogs with hybrid vector retrieval and execute secure Razorpay transactions.",
+    techStack: ["Python", "FastMCP", "Razorpay API", "ChromaDB", "Vector Search", "FastAPI", "Pytest", "OpenAI API"],
+    features: [
+      "FastMCP & Razorpay integration transforming unstructured D2C merchant catalogs into 100% agent-readable APIs",
+      "Hybrid search engine combining ChromaDB vector embeddings with sub-millisecond keyword fallback (0.010ms lookup)",
+      "Cryptographic Payment Integrity Guard preventing price manipulation and parameter tampering during agentic checkout",
+      "Built for Razorpay AI Buildathon with 100% test suite pass rate (17/17 pytest suites passing)",
+    ],
+    category: ['ML-DL', 'Web-App'],
+    github: 'https://github.com/Gocodein/merchant-ai-readability',
+    demo: null,
+  },
+  {
+    title: "AI Engineer OS — Personal Productivity PWA",
+    badge: "Live", badgeColor: "#22c55e",
+    role: "Full-Stack Developer & Architect", period: "Sep 2026 — Present",
+    description: "A production-ready PWA & personal operating system engineered for AI/ML developers to manage daily routines, DSA problem solving, AI project sprints, habit streaks, and focus sessions with cross-device sync.",
+    techStack: ["Next.js 16", "React 19", "TypeScript", "Prisma ORM", "Supabase PostgreSQL", "Tailwind CSS", "Auth.js v5", "PWA", "Vercel"],
+    features: [
+      "Full-stack Next.js 16 App Router application integrated with Supabase PostgreSQL via Prisma ORM & Auth.js v5",
+      "Progressive Web App (PWA) architecture with standalone manifest, offline capability, and native mobile home-screen installation",
+      "Integrated modules for daily routine tracking, DSA problem solving, AI project sprints, habit streaks, and Pomodoro focus timers",
+      "Deployed on Vercel with automated CI/CD and connection pooling for zero cold-start latency",
+    ],
+    category: ['Web-App', 'ML-DL'],
+    github: 'https://github.com/Gocodein/daily-task-tracker',
+    demo: 'https://daily-task-tracker.vercel.app',
+  },
   {
     title: "Arachnid — Bio-Inspired Spider",
     badge: "Patented", badgeColor: "#c9a646",
@@ -526,14 +559,14 @@ const PROJECTS_DATA = [
   {
     title: 'JIVAN — Rescue Drone AI',
     badge: 'In Progress', badgeColor: '#f59e0b',
-    role: 'AI Developer', period: 'Jul 2026 — Present',
-    description: 'An AI-powered rescue-drone system that analyzes live FPV or mobile camera footage to detect trapped victims and produce a reviewable victim list for emergency rescue teams.',
-    techStack: ['Python', 'ONNX', 'YOLO', 'OpenCV', 'Flask', 'JavaScript', 'FPV Camera', 'Mobile Camera'],
+    role: 'AI Developer & Architect', period: 'Jul 2026 — Present',
+    description: 'An AI-powered rescue-drone decision-support system analyzing live FPV and mobile feeds to detect victims, evaluate threat risk levels, and prioritize rescue missions.',
+    techStack: ['Python', 'ONNX Runtime', 'YOLO', 'OpenCV', 'Flask', 'JavaScript', 'FPV Camera', 'Thermal Fusion'],
     features: [
-      'Real-time victim detection via FPV drone camera or mobile camera feed with bounding boxes and confidence scores',
-      'ONNX-based person detector with cross-frame tracking IDs and operator confirmation workflow',
-      'Built-in data collection pipeline — frame export, YOLO label export, and detection report generation for model fine-tuning',
-      'Responsive browser UI for desktop and mobile with live overlay drawing and victim list management',
+      'Real-time victim detection & risk scoring via FPV drone and mobile camera feeds with bounding boxes and confidence metrics',
+      'Continuous live AI inference loop (1.4 FPS) in-browser using ONNX Runtime with multi-frame tracking IDs',
+      'Thermal & RGB vision fusion pipeline calculating victim threat priority (High/Medium/Low) for emergency teams',
+      'Integrated operator verification workflow and automated dataset export pipeline for model fine-tuning',
     ],
     category: ['ML-DL', 'Web-App'],
     github: 'https://github.com/Gocodein/jivan',
@@ -1021,8 +1054,8 @@ function About({ t }) {
 
 /* TechMarquee ─ Infinite dual-row scrolling technology ticker (extracted from brutalist-void template) */
 function TechMarquee({ t }) {
-  const row1 = ["PYTHON", "OPENCV", "TENSORFLOW", "PYTORCH", "YOLO", "ROS / IOT", "REACT", "FLASK", "ABAP CLOUD", "SQL"];
-  const row2 = ["COMPUTER VISION", "GENERATIVE AI", "DEEP LEARNING", "RESCUE DRONES", "HEALTH MONITORING", "EMBEDDED IOT", "PATENTED ROBOTICS"];
+  const row1 = ["PYTHON", "FASTMCP", "NEXT.JS 16", "TYPESCRIPT", "CHROMADB", "OPENCV", "TENSORFLOW", "PYTORCH", "YOLO", "ROS / IOT", "REACT", "FLASK", "SUPABASE", "SQL"];
+  const row2 = ["AGENTIC COMMERCE", "COMPUTER VISION", "GENERATIVE AI", "DEEP LEARNING", "RESCUE DRONES", "HEALTH MONITORING", "EMBEDDED IOT", "PATENTED ROBOTICS"];
 
   const renderRow = (items, direction) => {
     const list = [...items, ...items, ...items, ...items];
