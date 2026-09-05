@@ -499,13 +499,14 @@ const PROJECTS_DATA = [
     badge: "2 Patents · Live App", badgeColor: "#c9a646",
     role: "AI Developer & Hardware Support Engineer", period: "Aug 2025 — Present",
     patentNo: "Design Reg. 467786-001 | App. 202531071175 A",
-    description: "A bio-inspired hexapod robotic spider (HEXAPOD ROBOT) using computer vision, YOLOv8, and deep learning to track and protect 9 endangered species in their natural habitats.",
+    description: "Arachnid Research Companion (ARC): A biomimetic hexapod robot using computer vision, YOLOv8, and deep learning for ground-level environmental monitoring and endangered species protection.",
     techStack: ["Python", "PyTorch", "YOLOv8", "OpenCV", "Streamlit", "timm", "Plotly", "Arduino Mega", "Raspberry Pi 4", "IoT"],
     features: [
-      "Official Design Patent registered (No. 467786-001, Class 15-99) & Invention Patent filed (No. 202531071175 A)",
+      "Official Design Patent registered (No. 467786-001, Class 15-99) by Controller General of Patents, Govt. of India",
+      "Invention Patent Application published (No. 202531071175 A) for ARC biomimetic ground-level environmental monitoring",
       "Multi-model AI pipeline using YOLOv8 & PyTorch for 9 target species (Bengal Tiger, Asian Elephant, Leopard, Rhino, etc.)",
       "Interactive 6-page Streamlit research dashboard with real-time species analytics, spatial heatmaps, & kinematic behavior tracking",
-      "Seamless IoT hardware integration (Arduino Mega, Raspberry Pi 4, Pi Cam) with sub-250ms video latency",
+      "Seamless IoT hardware integration (Arduino Mega + Raspberry Pi) with sub-250ms video latency",
     ],
     category: ['ML-DL', 'Hardware/IoT', 'Web-App'],
     github: 'https://github.com/Gocodein/spidy.git',
@@ -1162,7 +1163,7 @@ function Projects({ t }) {
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{p.title}</div>
-                  <div style={{ fontSize: 12, color: t.textMuted, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.description}</div>
+                  <div style={{ fontSize: 12, color: t.textMuted, marginTop: 4, lineHeight: 1.5, whiteSpace: "normal", wordBreak: "break-word" }}>{p.description}</div>
                 </div>
                 <span style={{
                   padding: "3px 12px", borderRadius: 999, fontSize: 11, fontWeight: 600, flexShrink: 0,
@@ -1176,6 +1177,10 @@ function Projects({ t }) {
                     <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Briefcase size={11} />{p.role}</span>
                     <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Calendar size={11} />{p.period}</span>
                     {p.patentNo && <span style={{ display: "flex", alignItems: "center", gap: 4, color: t.gold }}><Award size={11} />Patent No. {p.patentNo}</span>}
+                  </div>
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub, textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>Overview</div>
+                    <p style={{ fontSize: 13, color: t.textSub, lineHeight: 1.65, margin: 0, fontFamily: "'Outfit', sans-serif" }}>{p.description}</p>
                   </div>
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub, textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>Tech Stack</div>
