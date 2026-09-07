@@ -472,7 +472,7 @@ const SKILLS_DATA = [
       { name: "Next.js 16", level: 4 }, { name: "React 19", level: 5 },
       { name: "Git / GitHub", level: 5 }, { name: "Prisma ORM", level: 4 },
       { name: "Supabase PostgreSQL", level: 4 }, { name: "Arduino IDE", level: 4 },
-      { name: "OpenAI API", level: 4 }, { name: "Vercel", level: 4 },
+      { name: "Anthropic / Gemini API", level: 4 }, { name: "Vercel", level: 4 },
     ],
   },
 ];
@@ -483,7 +483,7 @@ const PROJECTS_DATA = [
     badge: "Hackathon", badgeColor: "#c9a646",
     role: "AI Architect & Lead Engineer", period: "Sep 2026",
     description: "An agentic financial operating system and FastMCP gateway enabling autonomous AI agents to search D2C and SMB Indian merchant catalogs with hybrid vector retrieval and execute secure Razorpay transactions.",
-    techStack: ["Python", "FastMCP", "Razorpay API", "ChromaDB", "Vector Search", "FastAPI", "Pytest", "OpenAI API"],
+    techStack: ["Python", "FastMCP", "Razorpay API", "ChromaDB", "Anthropic API", "Gemini API", "Vector Search", "FastAPI", "Pytest"],
     features: [
       "FastMCP & Razorpay integration transforming unstructured D2C and SMB Indian merchant catalogs into 100% agent-readable APIs",
       "Hybrid search engine combining ChromaDB vector embeddings with sub-millisecond keyword fallback (0.010ms lookup)",
@@ -508,7 +508,7 @@ const PROJECTS_DATA = [
       "Interactive 6-page Streamlit research dashboard with real-time species analytics, spatial heatmaps, & kinematic behavior tracking",
       "Seamless IoT hardware integration (Arduino Mega + Raspberry Pi) with sub-250ms video latency",
     ],
-    category: ['ML-DL', 'Hardware/IoT', 'Web-App'],
+    category: ['ML-DL', 'Hardware/IoT'],
     github: 'https://github.com/Gocodein/spidy.git',
     demo: 'https://6gtwjs9csfbmyt957xc3nv.streamlit.app/',
   },
@@ -539,7 +539,7 @@ const PROJECTS_DATA = [
       'Thermal & RGB vision fusion pipeline calculating victim threat priority (High/Medium/Low) for emergency teams',
       'Integrated operator verification workflow and automated dataset export pipeline for model fine-tuning',
     ],
-    category: ['ML-DL', 'Web-App'],
+    category: ['ML-DL', 'Hardware/IoT'],
     github: 'https://github.com/Gocodein/jivan',
     demo: null,
   },
@@ -555,7 +555,7 @@ const PROJECTS_DATA = [
       "Integrated modules for daily routine tracking, DSA problem solving, AI project sprints, habit streaks, and Pomodoro focus timers",
       "Deployed on Vercel with automated CI/CD and connection pooling for zero cold-start latency",
     ],
-    category: ['Web-App', 'ML-DL'],
+    category: ['Web-App'],
     github: 'https://github.com/Gocodein/daily-task-tracker',
     demo: 'https://daily-task-tracker-gray.vercel.app/',
   },
@@ -1074,7 +1074,7 @@ function About({ t }) {
 
 /* TechMarquee ─ Infinite dual-row scrolling technology ticker (extracted from brutalist-void template) */
 function TechMarquee({ t }) {
-  const row1 = ["PYTHON", "FASTMCP", "NEXT.JS 16", "TYPESCRIPT", "CHROMADB", "OPENCV", "TENSORFLOW", "PYTORCH", "YOLO", "ROS / IOT", "REACT", "FLASK", "SUPABASE", "SQL"];
+  const row1 = ["PYTHON", "FASTMCP", "NEXT.JS 16", "TYPESCRIPT", "CHROMADB", "GEMINI API", "ANTHROPIC", "OPENCV", "TENSORFLOW", "PYTORCH", "YOLO", "ROS / IOT", "REACT", "FLASK", "SUPABASE", "SQL"];
   const row2 = ["AGENTIC COMMERCE", "COMPUTER VISION", "GENERATIVE AI", "DEEP LEARNING", "RESCUE DRONES", "HEALTH MONITORING", "EMBEDDED IOT", "PATENTED ROBOTICS"];
 
   const renderRow = (items, direction) => {
