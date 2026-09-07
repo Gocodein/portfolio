@@ -81,9 +81,20 @@ function ParticleCanvas({ t }) {
     };
     draw();
 
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animRef.current);
+      } else {
+        cancelAnimationFrame(animRef.current);
+        animRef.current = requestAnimationFrame(draw);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     return () => {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener("resize", onResize);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, [t, initParticles]);
 
@@ -482,7 +493,7 @@ const PROJECTS_DATA = [
     title: "Merchant AI Readability & Autonomous Commerce",
     badge: "Hackathon Finalist · FastMCP", badgeColor: "#c9a646",
     role: "AI Architect & Lead Engineer", period: "Sep 2026",
-    description: "An agentic financial operating system and FastMCP gateway enabling autonomous AI agents to search D2C and SMB Indian merchant catalogs with hybrid vector retrieval and execute secure Razorpay transactions.",
+    description: "Architected an Agentic FastMCP Commerce Gateway connecting autonomous LLMs to D2C merchant inventories via ChromaDB hybrid vector search (0.010ms lookup); enforced 0% transaction tampering through HMAC cryptographic signatures and validated end-to-end checkout with 17/17 automated pytest suites.",
     techStack: ["Python", "FastMCP", "Razorpay API", "ChromaDB", "Anthropic API", "Gemini API", "Vector Search", "FastAPI", "Pytest"],
     category: ['All', 'Agentic AI & FastMCP', 'Full-Stack Web', 'ML-DL', 'Web-App'],
     architecture: {
@@ -532,7 +543,7 @@ const PROJECTS_DATA = [
     badge: "2 Patents · Live App", badgeColor: "#c9a646",
     role: "AI Developer & Hardware Support Engineer", period: "Aug 2025 — Present",
     patentNo: "Design Reg. 467786-001 | App. 202531071175 A",
-    description: "Arachnid Research Companion (ARC): A biomimetic hexapod robot using computer vision, YOLOv8, and deep learning for ground-level environmental monitoring and endangered species protection.",
+    description: "Co-invented and patented (Design Reg. 467786-001, App. 202531071175 A) a bio-inspired hexapod robot for non-invasive ecological monitoring; engineered an edge YOLOv8 and PyTorch vision pipeline tracking 9 endangered species at sub-250ms stream latency with 18-DOF inverse kinematic terrain stabilization.",
     techStack: ["Python", "PyTorch", "YOLOv8", "OpenCV", "Streamlit", "timm", "Plotly", "Arduino Mega", "Raspberry Pi 4", "IoT"],
     category: ['All', 'Robotics & IoT', 'Computer Vision & Drones', 'ML-DL', 'Hardware/IoT'],
     architecture: {
@@ -622,7 +633,7 @@ const PROJECTS_DATA = [
     title: 'JIVAN — Rescue Drone AI',
     badge: 'Active R&D', badgeColor: '#f59e0b',
     role: 'AI Developer & Architect', period: 'Jul 2026 — Present',
-    description: 'An AI-powered rescue-drone decision-support system analyzing live FPV and mobile feeds to detect victims, evaluate threat risk levels, and prioritize rescue missions.',
+    description: 'Developed an edge aerial triage AI fusing live RGB and thermal FPV drone video to detect victims in disaster zones; deployed quantized YOLO models inside the client browser via WebAssembly ONNX Runtime, eliminating cloud dependency during telecom blackouts.',
     techStack: ['Python', 'ONNX Runtime', 'YOLO', 'OpenCV', 'Flask', 'JavaScript', 'FPV Camera', 'Thermal Fusion'],
     category: ['All', 'Computer Vision & Drones', 'Robotics & IoT', 'ML-DL', 'Hardware/IoT'],
     architecture: {
@@ -666,7 +677,7 @@ const PROJECTS_DATA = [
     title: "AI Engineer OS — Personal Productivity PWA",
     badge: "Live App · Production", badgeColor: "#22c55e",
     role: "Full-Stack Developer & Architect", period: "June 2026 — Present",
-    description: "A production-ready PWA & personal operating system engineered for AI/ML developers to manage daily routines, DSA problem solving, AI project sprints, habit streaks, and focus sessions with cross-device sync.",
+    description: "Engineered a production-ready Progressive Web App (PWA) on Next.js 16 App Router and React 19 for developer sprint management; achieved 100% Google Lighthouse ratings by configuring PgBouncer connection-pooled Supabase queries and service-worker offline state synchronization.",
     techStack: ["Next.js 16", "React 19", "TypeScript", "Prisma ORM", "Supabase PostgreSQL", "Tailwind CSS", "Auth.js v5", "PWA", "Vercel"],
     category: ['All', 'Full-Stack Web', 'Web-App'],
     architecture: {
@@ -767,10 +778,10 @@ const EXPERIENCE_DATA = [
 
 // Scored / exam-based certs (full card with score bar)
 const CERTS_SCORED = [
-  { name: "SAP Certified – Back-End Developer (ABAP Cloud)", org: "SAP SE", weeks: null, period: "June 2026 – June 2027 · 1 yr Validiti", score: null, verify: "https://www.credly.com/badges/96cfe04d-c44a-45d0-ab7b-52293a60a771", badge: "Exam Certified" },
-  { name: "Natural Language Processing", org: "NPTEL", weeks: 12, period: "Jan – Apr 2026", score: 57, verify: "https://nptel.ac.in/noc/E_Certificate/NOC26CS45S105750069604840008" },
-  { name: "Fundamentals of Artificial Intelligence", org: "NPTEL", weeks: 12, period: "Jul – Oct 2025", score: 63, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25GE55S125960077910799707" },
-  { name: "Programming in Java", org: "NPTEL", weeks: 12, period: "Jan – Apr 2025", score: 72, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25CS57S114840034704432631" },
+  { name: "SAP Certified – Back-End Developer (ABAP Cloud)", org: "SAP SE", weeks: null, period: "June 2026 – June 2027 · 1 Year Validity", score: null, verify: "https://www.credly.com/badges/96cfe04d-c44a-45d0-ab7b-52293a60a771", badge: "Exam Certified" },
+  { name: "Natural Language Processing", org: "NPTEL (IIT)", weeks: 12, period: "Jan – Apr 2026", score: null, verify: "https://nptel.ac.in/noc/E_Certificate/NOC26CS45S105750069604840008", badge: "IIT Certified" },
+  { name: "Fundamentals of Artificial Intelligence", org: "NPTEL (IIT)", weeks: 12, period: "Jul – Oct 2025", score: null, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25GE55S125960077910799707", badge: "IIT Certified" },
+  { name: "Programming in Java", org: "NPTEL (IIT)", weeks: 12, period: "Jan – Apr 2025", score: null, verify: "https://nptel.ac.in/noc/E_Certificate/NPTEL25CS57S114840034704432631", badge: "Elite Certified" },
 ];
 
 // Quick course completions (chip/tag layout — no score)
@@ -991,7 +1002,7 @@ function RecruiterPitchModal({ isOpen, onClose, t }) {
               Sagar Shaw — AI & Systems Engineer
             </h2>
             <div style={{ fontSize: 12, color: t.accentSub, marginTop: 4, fontFamily: "'JetBrains Mono', monospace" }}>
-              Kalyani Govt. Engg. College · Dual Patents · FastMCP & Edge AI
+              JIS College of Engineering, Kalyani · Dual Patents · FastMCP & Edge AI
             </div>
           </div>
           <button
@@ -1081,7 +1092,7 @@ function RecruiterPitchModal({ isOpen, onClose, t }) {
         {/* Actions */}
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <a
-            href="mailto:sagarshaw24@gmail.com"
+            href="mailto:sagarshaw.jisce@gmail.com"
             style={{
               flex: 1, minWidth: 140, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
               padding: "10px 16px", borderRadius: 10,
@@ -1184,10 +1195,10 @@ function CommandPalette({
       id: "copy-email",
       category: "Executive Signals",
       title: "Copy Email Address",
-      desc: "sagarshaw24@gmail.com",
+      desc: "sagarshaw.jisce@gmail.com",
       icon: Copy,
       action: () => {
-        navigator.clipboard.writeText("sagarshaw24@gmail.com");
+        navigator.clipboard.writeText("sagarshaw.jisce@gmail.com");
         setToast("Email copied to clipboard!");
         setTimeout(() => setToast(null), 2500);
       },
