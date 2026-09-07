@@ -824,11 +824,22 @@ function Overview({ t }) {
                 opacity: 0.5,
               }} />
               {cardMode === "photo" ? (
-                <img
-                  src="/profile1.png"
-                  alt="Sagar Shaw"
-                  style={{ width: "100%", aspectRatio: "240/270", objectFit: "cover", objectPosition: "center 15%", display: "block" }}
-                />
+                <div style={{ position: "relative", width: "100%", overflow: "hidden" }}>
+                  <img
+                    src="/profile1.png"
+                    alt="Sagar Shaw"
+                    style={{
+                      width: "100%", aspectRatio: "240/270",
+                      objectFit: "cover", objectPosition: "center 20%",
+                      display: "block",
+                    }}
+                  />
+                  <div style={{
+                    position: "absolute", bottom: 0, left: 0, right: 0, height: 42,
+                    background: `linear-gradient(to bottom, transparent, ${t.card})`,
+                    pointerEvents: "none",
+                  }} />
+                </div>
               ) : (
                 <ImageParticleCanvas src="/profile1.png" t={t} />
               )}
@@ -2056,7 +2067,7 @@ export default function App() {
             width: 28, height: 28, borderRadius: 7, padding: 1.5, overflow: "hidden",
             background: `linear-gradient(135deg, ${t.accent}, ${t.gold})`,
           }}>
-            <img src="/profile1.png" alt="SS" style={{ width: "100%", height: "100%", borderRadius: 5.5, objectFit: "cover", objectPosition: "center 15%", display: "block" }} />
+            <img src="/profile1.png" alt="SS" style={{ width: "100%", height: "100%", borderRadius: 5.5, objectFit: "cover", objectPosition: "center 20%", display: "block" }} />
           </div>
           <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Outfit', sans-serif", color: t.text }}>Sagar Shaw</span>
         </div>
@@ -2100,7 +2111,7 @@ export default function App() {
                 alt="Sagar Shaw"
                 style={{
                   width: "100%", height: "100%", borderRadius: 8,
-                  objectFit: "cover", objectPosition: "center 15%", display: "block",
+                  objectFit: "cover", objectPosition: "center 20%", display: "block",
                 }}
               />
             </div>
