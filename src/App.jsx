@@ -1679,7 +1679,7 @@ function Contact({ t }) {
 
   const avail = [
     { label: "Available", sub: "For new roles", c: "#22c55e" },
-    { label: "24 hrs", sub: "Response time", c: t.text },
+    { label: "6 hrs", sub: "Response time", c: t.text },
     { label: "Remote", sub: "Preferred", c: "#f59e0b" },
     { label: "Flexible", sub: "Start date", c: "#8b5cf6" },
   ];
