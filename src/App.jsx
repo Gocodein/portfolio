@@ -945,7 +945,7 @@ function About({ t }) {
   return (
     <div>
       <PageTitle t={t} num="01">About Me</PageTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,280px)", gap: 20, alignItems: "start" }}
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,340px)", gap: 20, alignItems: "start" }}
         className="about-grid">
         <div>
           {[
@@ -977,9 +977,15 @@ function About({ t }) {
               ["Design Reg.", "467786-001 (Class 15-99)"], ["Invention App.", "202531071175 A"],
               ["Expected Grad.", "June 2027"],
             ].map(([k, v]) => (
-              <div key={k} style={{ display: "flex", gap: 8, marginBottom: 9 }}>
-                <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.textMuted, minWidth: 90, paddingTop: 1 }}>{k}</div>
-                <div style={{ fontSize: 12, color: t.text }}>{v}</div>
+              <div key={k} style={{ display: "flex", gap: 10, marginBottom: 9, alignItems: "center" }}>
+                <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: t.textMuted, minWidth: 85, flexShrink: 0 }}>{k}</div>
+                <div style={{ fontSize: 12, color: t.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {k === "Email" ? (
+                    <a href={`mailto:${v}`} style={{ color: t.text, textDecoration: "none", transition: "color .2s" }} onMouseEnter={e => e.currentTarget.style.color = t.accentSub} onMouseLeave={e => e.currentTarget.style.color = t.text}>
+                      {v}
+                    </a>
+                  ) : v}
+                </div>
               </div>
             ))}
           </GlassCard>
@@ -1978,7 +1984,7 @@ export default function App() {
           .desktop-sidebar { transform:translateX(-100%); transition:transform 0.3s cubic-bezier(.4,0,.2,1); }
           .desktop-sidebar.open { transform:translateX(0); }
         }
-        @media (max-width:640px) {
+        @media (max-width:880px) {
           .about-grid { grid-template-columns:1fr !important; }
         }
         @media (min-width:1024px) {
