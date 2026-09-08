@@ -261,9 +261,10 @@ function ImageParticleCanvas({ src = "/profile1.png", t }) {
         width: "100%",
         aspectRatio: "240/270",
         borderRadius: "22px 22px 0 0",
-        background: "rgba(0,0,0,0.35)",
+        background: t.name === "Meadow" ? "rgba(244, 248, 245, 0.95)" : "rgba(0,0,0,0.35)",
         display: "block",
         cursor: "crosshair",
+        borderBottom: `1px solid ${t.border}`,
       }}
     />
   );
@@ -1768,8 +1769,11 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
                   position: "absolute", top: 10, right: 10, zIndex: 10,
                   fontSize: 9, fontFamily: "'JetBrains Mono', monospace",
                   padding: "3px 8px", borderRadius: 999,
-                  background: "rgba(0,0,0,0.65)", color: t.name === "Meadow" ? "#fde68a" : t.gold,
-                  border: `1px solid rgba(255,255,255,0.2)`, backdropFilter: "blur(8px)",
+                  background: t.name === "Meadow" ? "rgba(255, 255, 255, 0.88)" : "rgba(0,0,0,0.65)",
+                  color: t.name === "Meadow" ? t.accent : t.gold,
+                  border: `1px solid ${t.name === "Meadow" ? "rgba(22, 101, 52, 0.22)" : "rgba(255,255,255,0.2)"}`,
+                  boxShadow: t.name === "Meadow" ? "0 2px 8px rgba(0,0,0,0.06)" : "none",
+                  backdropFilter: "blur(8px)",
                   cursor: "pointer", display: "flex", alignItems: "center", gap: 3,
                   transition: "all 0.2s ease"
                 }}
@@ -1781,10 +1785,10 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
               <div style={{
                 position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
                 background: `linear-gradient(${105 + tilt.x * 3}deg, transparent 30%, ${t.glassHighlight} 50%, transparent 70%)`,
-                opacity: 0.5,
+                opacity: t.name === "Meadow" ? 0.12 : 0.45,
               }} />
               {cardMode === "photo" ? (
-                <div style={{ position: "relative", width: "100%", overflow: "hidden" }}>
+                <div style={{ position: "relative", width: "100%", overflow: "hidden", borderBottom: `1px solid ${t.border}` }}>
                   <img
                     src="/profile1.png"
                     alt="Sagar Shaw"
@@ -1794,11 +1798,13 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
                       display: "block",
                     }}
                   />
-                  <div style={{
-                    position: "absolute", bottom: 0, left: 0, right: 0, height: 42,
-                    background: `linear-gradient(to bottom, transparent, ${t.name === "Meadow" ? "rgba(255, 255, 255, 0.92)" : t.card})`,
-                    pointerEvents: "none",
-                  }} />
+                  {t.name !== "Meadow" && (
+                    <div style={{
+                      position: "absolute", bottom: 0, left: 0, right: 0, height: 42,
+                      background: `linear-gradient(to bottom, transparent, ${t.card})`,
+                      pointerEvents: "none",
+                    }} />
+                  )}
                 </div>
               ) : (
                 <ImageParticleCanvas src="/profile1.png" t={t} />
