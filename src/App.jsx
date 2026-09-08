@@ -409,7 +409,7 @@ function LinkedinIcon({ size = 24, color = "currentColor", ...props }) {
 // ─────────────────────────────────────────────
 const THEMES = {
   midnight: {
-    bg: "#091410", sidebar: "rgba(16, 32, 20, 0.5)", surface: "rgba(255,255,255,0.03)",
+    bg: "#091410", sidebar: "rgba(16, 32, 20, 0.65)", surface: "rgba(255,255,255,0.03)",
     card: "rgba(255, 255, 255, 0.07)", border: "rgba(255, 255, 255, 0.15)",
     text: "#e8f2eb", textSub: "#9cb8a3", textMuted: "#5a7d63",
     accent: "#4ade80", accentSub: "#86efac",
@@ -422,20 +422,30 @@ const THEMES = {
     cardHoverShadow: "0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12)",
     glassHighlight: "rgba(255,255,255,0.09)",
     glassBg: "rgba(255,255,255,0.04)",
+    codeBg: "rgba(0, 0, 0, 0.45)",
+    codeBorder: "rgba(255, 255, 255, 0.12)",
+    codeText: "#86efac",
+    modalBackdrop: "rgba(0, 0, 0, 0.75)",
+    modalCard: "linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04))",
   },
   matinee: {
-    bg: "#e8f3eb", sidebar: "rgba(255,255,255,0.45)", surface: "rgba(255,255,255,0.4)",
-    card: "rgba(255,255,255,0.35)", border: "rgba(22,80,40,0.15)",
-    text: "#0a1f10", textSub: "#2d4a35", textMuted: "#5a7d63",
-    accent: "#16a34a", accentSub: "#22c55e",
-    accentGlow: "rgba(22,163,74,0.1)",
-    gold: "#0a1f3d", goldLight: "#1e3a5f",
-    navActive: "rgba(22,163,74,0.08)", badge: "rgba(22,163,74,0.06)", dotEmpty: "rgba(22,80,40,0.1)",
+    bg: "#f4f8f5", sidebar: "rgba(255,255,255,0.88)", surface: "rgba(255,255,255,0.8)",
+    card: "rgba(255, 255, 255, 0.88)", border: "rgba(22, 101, 52, 0.16)",
+    text: "#0a1f10", textSub: "#1f3d27", textMuted: "#476852",
+    accent: "#15803d", accentSub: "#166534",
+    accentGlow: "rgba(21,128,61,0.12)",
+    gold: "#b45309", goldLight: "#d97706",
+    navActive: "rgba(21,128,61,0.1)", badge: "rgba(21,128,61,0.08)", dotEmpty: "rgba(22,101,52,0.18)",
     name: "Meadow",
-    orb1: "#22c55e", orb2: "#4ade80", orb3: "#f59e0b",
-    cardHoverShadow: "0 16px 48px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6)",
-    glassHighlight: "rgba(255,255,255,0.6)",
-    glassBg: "rgba(255,255,255,0.15)",
+    orb1: "#86efac", orb2: "#bbf7d0", orb3: "#fde68a",
+    cardHoverShadow: "0 16px 40px rgba(22,101,52,0.08), 0 2px 10px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
+    glassHighlight: "rgba(255,255,255,0.95)",
+    glassBg: "rgba(255,255,255,0.72)",
+    codeBg: "rgba(22, 101, 52, 0.05)",
+    codeBorder: "rgba(22, 101, 52, 0.15)",
+    codeText: "#15803d",
+    modalBackdrop: "rgba(15, 30, 20, 0.45)",
+    modalCard: "#ffffff",
   },
 };
 
@@ -491,7 +501,7 @@ const SKILLS_DATA = [
 const PROJECTS_DATA = [
   {
     title: "Merchant AI Readability & Autonomous Commerce",
-    badge: "Hackathon Finalist · FastMCP", badgeColor: "#c9a646",
+    badge: "Razorpay Buildathon · FastMCP", badgeColor: "#c9a646",
     role: "AI Architect & Lead Engineer", period: "Sep 2026",
     description: "Architected an Agentic FastMCP Commerce Gateway connecting autonomous LLMs to D2C merchant inventories via ChromaDB hybrid vector search (0.010ms lookup); enforced 0% transaction tampering through HMAC cryptographic signatures and validated end-to-end checkout with 17/17 automated pytest suites.",
     techStack: ["Python", "FastMCP", "Razorpay API", "ChromaDB", "Anthropic API", "Gemini API", "Vector Search", "FastAPI", "Pytest"],
@@ -893,8 +903,8 @@ function Tag({ label, t }) {
     <span className="tag-hover" style={{
       display: "inline-block", padding: "4px 11px", borderRadius: 999,
       background: t.badge, border: `1px solid ${t.border}`,
-      color: t.accentSub, fontSize: 11,
-      fontFamily: "'JetBrains Mono', monospace",
+      color: t.name === "Meadow" ? t.accent : t.accentSub, fontSize: 11,
+      fontFamily: "'JetBrains Mono', monospace", fontWeight: 500,
     }}>{label}</span>
   );
 }
@@ -918,6 +928,7 @@ function PageTitle({ children, t, num }) {
 }
 
 function GlassCard({ children, t, style = {}, className = "" }) {
+  const isLight = t.name === "Meadow";
   return (
     <div className={`card-hover glass-card ${className}`} style={{
       position: "relative",
@@ -927,7 +938,9 @@ function GlassCard({ children, t, style = {}, className = "" }) {
       borderRadius: 18, padding: 20, overflow: "hidden", minWidth: 0, wordBreak: "break-word",
       backdropFilter: "blur(28px) saturate(1.6)",
       WebkitBackdropFilter: "blur(28px) saturate(1.6)",
-      boxShadow: `inset 0 1px 0 0 ${t.glassHighlight}, inset 0 0 30px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)`,
+      boxShadow: isLight
+        ? `inset 0 1px 0 0 ${t.glassHighlight}, 0 10px 30px rgba(22,101,52,0.06), 0 1px 4px rgba(0,0,0,0.03)`
+        : `inset 0 1px 0 0 ${t.glassHighlight}, inset 0 0 30px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)`,
       ...style,
     }}>
       {children}
@@ -947,6 +960,7 @@ function GlassCard({ children, t, style = {}, className = "" }) {
 // ─────────────────────────────────────────────
 function RecruiterPitchModal({ isOpen, onClose, t }) {
   if (!isOpen) return null;
+  const isLight = t.name === "Meadow";
 
   return (
     <div
@@ -955,7 +969,7 @@ function RecruiterPitchModal({ isOpen, onClose, t }) {
         position: "fixed",
         inset: 0,
         zIndex: 500,
-        background: "rgba(0, 0, 0, 0.72)",
+        background: t.modalBackdrop,
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
         display: "flex",
@@ -972,14 +986,16 @@ function RecruiterPitchModal({ isOpen, onClose, t }) {
           maxWidth: 640,
           maxHeight: "90vh",
           overflowY: "auto",
-          background: `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
+          background: t.modalCard,
           border: `1px solid ${t.gold}66`,
           borderTop: `2px solid ${t.gold}`,
           borderRadius: 22,
           padding: 24,
           backdropFilter: "blur(32px) saturate(1.8)",
           WebkitBackdropFilter: "blur(32px) saturate(1.8)",
-          boxShadow: `0 24px 70px rgba(0,0,0,0.6), 0 0 40px ${t.accent}22`,
+          boxShadow: isLight
+            ? "0 24px 60px rgba(22,101,52,0.15), 0 4px 20px rgba(0,0,0,0.06)"
+            : `0 24px 70px rgba(0,0,0,0.6), 0 0 40px ${t.accent}22`,
           position: "relative",
         }}
       >
@@ -1059,10 +1075,10 @@ function RecruiterPitchModal({ isOpen, onClose, t }) {
           <div style={{
             padding: "14px 16px", borderRadius: 14,
             background: t.surface, border: `1px solid ${t.border}`,
-            borderLeft: `3px solid #38bdf8`,
+            borderLeft: `3px solid ${isLight ? "#0284c7" : "#38bdf8"}`,
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4 }}>
-              <Rocket size={14} color="#38bdf8" />
+              <Rocket size={14} color={isLight ? "#0284c7" : "#38bdf8"} />
               <span style={{ fontSize: 13, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>
                 3. Production Web & Full-Stack Systems
               </span>
@@ -1144,6 +1160,7 @@ function CommandPalette({
   isOpen, onClose, t, theme, setTheme,
   navigate, onOpenPitch, onSelectProject,
 }) {
+  const isLight = t.name === "Meadow";
   const [query, setQuery] = useState("");
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [toast, setToast] = useState(null);
@@ -1376,7 +1393,7 @@ function CommandPalette({
         position: "fixed",
         inset: 0,
         zIndex: 500,
-        background: "rgba(0, 0, 0, 0.72)",
+        background: t.modalBackdrop,
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
         display: "flex",
@@ -1391,14 +1408,16 @@ function CommandPalette({
         style={{
           width: "100%",
           maxWidth: 580,
-          background: `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
+          background: t.modalCard,
           border: `1px solid ${t.border}`,
           borderTop: `1px solid ${t.glassHighlight}`,
           borderRadius: 18,
           overflow: "hidden",
           backdropFilter: "blur(32px) saturate(1.8)",
           WebkitBackdropFilter: "blur(32px) saturate(1.8)",
-          boxShadow: `0 24px 60px rgba(0,0,0,0.5), 0 0 35px ${t.accent}20`,
+          boxShadow: isLight
+            ? "0 20px 50px rgba(22,101,52,0.12), 0 2px 10px rgba(0,0,0,0.06)"
+            : `0 24px 60px rgba(0,0,0,0.5), 0 0 35px ${t.accent}20`,
         }}
       >
         {/* Search Bar Header */}
@@ -1445,11 +1464,11 @@ function CommandPalette({
         {toast && (
           <div style={{
             padding: "8px 16px",
-            background: "#22c55e22",
-            color: "#22c55e",
+            background: isLight ? "rgba(21, 128, 61, 0.1)" : "#22c55e22",
+            color: isLight ? "#15803d" : "#22c55e",
             fontSize: 11.5,
             fontFamily: "'JetBrains Mono', monospace",
-            borderBottom: `1px solid #22c55e44`,
+            borderBottom: `1px solid ${isLight ? "rgba(21, 128, 61, 0.25)" : "#22c55e44"}`,
             textAlign: "center",
           }}>
             ✓ {toast}
@@ -1487,7 +1506,7 @@ function CommandPalette({
                     width: 32,
                     height: 32,
                     borderRadius: 8,
-                    background: isSelected ? `linear-gradient(135deg, ${t.accent}33, ${t.accentSub}22)` : t.surface,
+                    background: isSelected ? (isLight ? "rgba(21, 128, 61, 0.12)" : `linear-gradient(135deg, ${t.accent}33, ${t.accentSub}22)`) : t.surface,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1544,6 +1563,7 @@ function CommandPalette({
 // PATENTS SPOTLIGHT COMPONENT
 // ─────────────────────────────────────────────
 function PatentsSpotlight({ t }) {
+  const isLight = t.name === "Meadow";
   const [copied, setCopied] = useState(null);
 
   const copyPatent = (text, id) => {
@@ -1556,13 +1576,15 @@ function PatentsSpotlight({ t }) {
     <div style={{
       marginBottom: 24,
       borderRadius: 18,
-      background: `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
+      background: isLight ? "rgba(255, 255, 255, 0.95)" : `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
       border: `1px solid ${t.gold}55`,
       borderTop: `2px solid ${t.gold}`,
       padding: "20px 22px",
       backdropFilter: "blur(28px) saturate(1.6)",
       WebkitBackdropFilter: "blur(28px) saturate(1.6)",
-      boxShadow: `0 12px 40px rgba(0,0,0,0.2), 0 0 30px ${t.gold}15`,
+      boxShadow: isLight
+        ? "0 10px 32px rgba(180,83,9,0.08), 0 2px 8px rgba(0,0,0,0.04)"
+        : `0 12px 40px rgba(0,0,0,0.2), 0 0 30px ${t.gold}15`,
       position: "relative",
       overflow: "hidden",
     }}>
@@ -1602,14 +1624,17 @@ function PatentsSpotlight({ t }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14 }}>
         {/* Patent 1: Design Patent */}
         <div style={{
-          padding: 16, borderRadius: 14, background: t.surface,
+          padding: 16, borderRadius: 14, background: isLight ? "#ffffff" : t.surface,
           border: `1px solid ${t.border}`, display: "flex", flexDirection: "column", justifyContent: "space-between",
         }}>
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
               <span style={{
                 fontSize: 10, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700,
-                color: "#22c55e", background: "#22c55e18", padding: "2px 8px", borderRadius: 6, border: "1px solid #22c55e44",
+                color: isLight ? "#15803d" : "#22c55e",
+                background: isLight ? "rgba(21, 128, 61, 0.08)" : "#22c55e18",
+                padding: "2px 8px", borderRadius: 6,
+                border: isLight ? "1px solid rgba(21, 128, 61, 0.25)" : "1px solid #22c55e44",
               }}>
                 ✓ REGISTERED DESIGN PATENT
               </span>
@@ -1642,7 +1667,7 @@ function PatentsSpotlight({ t }) {
 
         {/* Patent 2: Invention Patent */}
         <div style={{
-          padding: 16, borderRadius: 14, background: t.surface,
+          padding: 16, borderRadius: 14, background: isLight ? "#ffffff" : t.surface,
           border: `1px solid ${t.border}`, display: "flex", flexDirection: "column", justifyContent: "space-between",
         }}>
           <div>
@@ -1725,12 +1750,14 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
               width: "100%", maxWidth: 240, borderRadius: 22, overflow: "hidden",
               transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
               transition: "transform 0.15s ease-out",
-              background: `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
+              background: t.name === "Meadow" ? "rgba(255, 255, 255, 0.92)" : `linear-gradient(135deg, ${t.card}, ${t.glassBg})`,
               border: `1px solid ${t.border}`,
               borderTop: `1px solid ${t.glassHighlight}`,
               backdropFilter: "blur(24px) saturate(1.5)",
               WebkitBackdropFilter: "blur(24px) saturate(1.5)",
-              boxShadow: `0 20px 60px rgba(0,0,0,0.25), inset 0 1px 0 ${t.glassHighlight}, 0 0 50px ${t.accent}18`,
+              boxShadow: t.name === "Meadow"
+                ? `0 16px 40px rgba(22,101,52,0.08), 0 2px 8px rgba(0,0,0,0.04)`
+                : `0 20px 60px rgba(0,0,0,0.25), inset 0 1px 0 ${t.glassHighlight}, 0 0 50px ${t.accent}18`,
               position: "relative",
             }}>
               {/* Mode toggle button */}
@@ -1741,8 +1768,8 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
                   position: "absolute", top: 10, right: 10, zIndex: 10,
                   fontSize: 9, fontFamily: "'JetBrains Mono', monospace",
                   padding: "3px 8px", borderRadius: 999,
-                  background: "rgba(0,0,0,0.65)", color: t.gold,
-                  border: `1px solid ${t.gold}55`, backdropFilter: "blur(8px)",
+                  background: "rgba(0,0,0,0.65)", color: t.name === "Meadow" ? "#fde68a" : t.gold,
+                  border: `1px solid rgba(255,255,255,0.2)`, backdropFilter: "blur(8px)",
                   cursor: "pointer", display: "flex", alignItems: "center", gap: 3,
                   transition: "all 0.2s ease"
                 }}
@@ -1769,7 +1796,7 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
                   />
                   <div style={{
                     position: "absolute", bottom: 0, left: 0, right: 0, height: 42,
-                    background: `linear-gradient(to bottom, transparent, ${t.card})`,
+                    background: `linear-gradient(to bottom, transparent, ${t.name === "Meadow" ? "rgba(255, 255, 255, 0.92)" : t.card})`,
                     pointerEvents: "none",
                   }} />
                 </div>
@@ -1781,7 +1808,7 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
                   {["AI/ML", "Computer Vision", "IoT", "GenAI", "Deep Learning"].map(tag => (
                     <span key={tag} style={{
                       fontSize: 9, padding: "3px 9px", borderRadius: 999,
-                      background: t.badge, color: t.accentSub, border: `1px solid ${t.border}`,
+                      background: t.badge, color: t.name === "Meadow" ? t.accent : t.accentSub, border: `1px solid ${t.border}`,
                       fontFamily: "'JetBrains Mono', monospace", fontWeight: 500,
                     }}>{tag}</span>
                   ))}
@@ -1870,7 +1897,7 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
           marginBottom: 22,
           padding: "12px 16px",
           borderRadius: 14,
-          background: `linear-gradient(135deg, ${t.surface}, ${t.card})`,
+          background: t.name === "Meadow" ? "rgba(255, 255, 255, 0.92)" : `linear-gradient(135deg, ${t.surface}, ${t.card})`,
           border: `1px solid ${t.border}`,
           borderLeft: `3px solid ${t.accent}`,
           display: "flex",
@@ -1886,13 +1913,13 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
             <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "3px 9px", borderRadius: 999, background: `${t.gold}18`, color: t.gold, border: `1px solid ${t.gold}44`, fontFamily: "'JetBrains Mono', monospace" }}>
               <Award size={12} /> 2 Govt. Patents
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "3px 9px", borderRadius: 999, background: `${t.accent}15`, color: t.accentSub, border: `1px solid ${t.accent}33`, fontFamily: "'JetBrains Mono', monospace" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "3px 9px", borderRadius: 999, background: `${t.accent}15`, color: t.accent, border: `1px solid ${t.accent}33`, fontFamily: "'JetBrains Mono', monospace" }}>
               <Activity size={12} /> 0.010ms Search
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "3px 9px", borderRadius: 999, background: `${t.accent}15`, color: t.accentSub, border: `1px solid ${t.accent}33`, fontFamily: "'JetBrains Mono', monospace" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "3px 9px", borderRadius: 999, background: `${t.accent}15`, color: t.accent, border: `1px solid ${t.accent}33`, fontFamily: "'JetBrains Mono', monospace" }}>
               <ShieldCheck size={12} /> 17/17 Pytests Pass
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "3px 9px", borderRadius: 999, background: `${t.accent}15`, color: t.accentSub, border: `1px solid ${t.accent}33`, fontFamily: "'JetBrains Mono', monospace" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "3px 9px", borderRadius: 999, background: `${t.accent}15`, color: t.accent, border: `1px solid ${t.accent}33`, fontFamily: "'JetBrains Mono', monospace" }}>
               <Zap size={12} /> 1.4 FPS On-Device ONNX
             </span>
           </div>
@@ -2153,6 +2180,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
 
   const getActiveTab = (idx) => activeTabs[idx] || 'arch';
   const setTab = (idx, tab) => setActiveTabs(prev => ({ ...prev, [idx]: tab }));
+  const isLight = t.name === "Meadow";
 
   return (
     <div>
@@ -2170,7 +2198,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
             transition: 'all 0.25s',
             ...(filter === tab
               ? { background: `linear-gradient(135deg, ${t.accent}, ${t.accentSub})`, color: '#fff', fontWeight: 700, border: 'none', boxShadow: `0 0 14px ${t.accent}33` }
-              : { background: t.card, border: `1px solid ${t.border}`, color: t.textSub, backdropFilter: 'blur(8px)' }),
+              : { background: isLight ? "#ffffff" : t.card, border: `1px solid ${t.border}`, color: t.textSub, backdropFilter: 'blur(8px)' }),
           }}>{tab}</button>
         ))}
       </div>
@@ -2183,12 +2211,13 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
 
           return (
             <div key={p.title} className="card-hover glass-card" style={{
-              background: t.card, border: `1px solid ${isOpen ? t.accentSub : t.border}`,
+              background: isLight ? (isOpen ? "#ffffff" : "rgba(255, 255, 255, 0.88)") : t.card,
+              border: `1px solid ${isOpen ? (isLight ? t.accent : t.accentSub) : t.border}`,
               borderRadius: 18, overflow: "hidden", transition: "border-color .3s, box-shadow .3s",
               backdropFilter: "blur(24px) saturate(1.4)", WebkitBackdropFilter: "blur(24px) saturate(1.4)",
               boxShadow: isOpen
-                ? `inset 0 1px 0 0 ${t.glassHighlight}, 0 0 28px ${t.accent}22, 0 8px 32px rgba(0,0,0,0.15)`
-                : `inset 0 1px 0 0 ${t.glassHighlight}, 0 4px 20px rgba(0,0,0,0.08)`,
+                ? (isLight ? "0 8px 30px rgba(22,101,52,0.08), 0 2px 8px rgba(0,0,0,0.04)" : `inset 0 1px 0 0 ${t.glassHighlight}, 0 0 28px ${t.accent}22, 0 8px 32px rgba(0,0,0,0.15)`)
+                : (isLight ? "0 4px 16px rgba(22,101,52,0.04)" : `inset 0 1px 0 0 ${t.glassHighlight}, 0 4px 20px rgba(0,0,0,0.08)`),
             }}>
               {/* Header Bar */}
               <button
@@ -2237,7 +2266,9 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
 
                 <span style={{
                   padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 600, flexShrink: 0,
-                  background: `${p.badgeColor}18`, color: p.badgeColor, border: `1px solid ${p.badgeColor}44`,
+                  background: isLight && p.badgeColor === "#c9a646" ? `${t.gold}18` : `${p.badgeColor}18`,
+                  color: isLight && p.badgeColor === "#c9a646" ? t.gold : p.badgeColor,
+                  border: `1px solid ${isLight && p.badgeColor === "#c9a646" ? t.gold : p.badgeColor}44`,
                   fontFamily: "'JetBrains Mono', monospace",
                 }}>
                   {p.badge}
@@ -2285,7 +2316,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
                           style={{
                             display: "flex", alignItems: "center", gap: 6,
                             padding: "6px 12px", borderRadius: 7, border: "none",
-                            background: active ? `linear-gradient(135deg, ${t.accent}25, ${t.accentSub}15)` : "transparent",
+                            background: active ? (isLight ? "rgba(21, 128, 61, 0.1)" : `linear-gradient(135deg, ${t.accent}25, ${t.accentSub}15)`) : "transparent",
                             color: active ? t.accent : t.textSub,
                             fontSize: 11.5, fontWeight: active ? 700 : 500,
                             fontFamily: "'JetBrains Mono', monospace", cursor: "pointer",
@@ -2317,7 +2348,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
                             style={{
                               display: "flex", alignItems: "flex-start", gap: 12,
                               padding: "10px 14px", borderRadius: 10,
-                              background: t.surface, border: `1px solid ${t.border}`,
+                              background: isLight ? "#ffffff" : t.surface, border: `1px solid ${t.border}`,
                             }}
                           >
                             <span style={{
@@ -2347,7 +2378,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
                       {/* ASCII Dataflow Box */}
                       <div style={{
                         padding: "12px 14px", borderRadius: 10,
-                        background: "rgba(0, 0, 0, 0.4)", border: `1px solid ${t.border}`,
+                        background: t.codeBg, border: `1px solid ${t.codeBorder}`,
                         overflowX: "auto",
                       }}>
                         <div style={{ fontSize: 9.5, fontFamily: "'JetBrains Mono', monospace", color: t.textMuted, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1.5 }}>
@@ -2355,7 +2386,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
                         </div>
                         <pre style={{
                           margin: 0, fontSize: 11, fontFamily: "'JetBrains Mono', monospace",
-                          color: t.accentSub, lineHeight: 1.45, whiteSpace: "pre",
+                          color: t.codeText, lineHeight: 1.45, whiteSpace: "pre",
                         }}>
                           {p.architecture.flowAscii}
                         </pre>
@@ -2375,7 +2406,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
                             key={m.label}
                             style={{
                               padding: "14px 16px", borderRadius: 12,
-                              background: t.surface, border: `1px solid ${t.border}`,
+                              background: isLight ? "#ffffff" : t.surface, border: `1px solid ${t.border}`,
                               borderTop: `2px solid ${t.accent}`,
                             }}
                           >
@@ -2401,7 +2432,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
                   {currentTab === "features" && (
                     <div className="fade-in">
                       <div style={{ marginBottom: 14 }}>
-                        <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub, textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
+                        <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono', monospace", color: isLight ? t.accent : t.accentSub, textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
                           Tech Stack Arsenal
                         </div>
                         <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -2410,7 +2441,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
                       </div>
 
                       <div style={{ marginBottom: 14 }}>
-                        <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub, textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
+                        <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono', monospace", color: isLight ? t.accent : t.accentSub, textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
                           System Features & Implementation Highlights
                         </div>
                         {p.features.map((f, j) => (
@@ -2435,7 +2466,7 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
                           <a href={p.github} target="_blank" rel="noopener noreferrer" className="card-hover" style={{
                             display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 18px',
                             borderRadius: 10, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
-                            background: t.card, border: `1px solid ${t.border}`, color: t.text,
+                            background: isLight ? "#ffffff" : t.card, border: `1px solid ${t.border}`, color: t.text,
                             backdropFilter: 'blur(8px)', textDecoration: 'none', transition: 'all 0.25s',
                           }}>
                             <GitBranch size={13} color={t.accent} /> Inspect Repository
@@ -2498,17 +2529,18 @@ function Skills({ t }) {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {items.map(({ name, level }) => {
                 const isStrong = level >= 4;
+                const isLight = t.name === "Meadow";
                 return (
                   <span key={name} className="tag-hover" style={{
                     display: "inline-block", padding: "6px 14px", borderRadius: 999,
                     fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: isStrong ? 600 : 400,
                     background: isStrong
-                      ? `linear-gradient(135deg, ${t.accent}15, ${t.accentSub}08)`
-                      : t.surface,
-                    border: `1px solid ${isStrong ? t.accent + "55" : t.border}`,
+                      ? (isLight ? "rgba(21, 128, 61, 0.08)" : `linear-gradient(135deg, ${t.accent}15, ${t.accentSub}08)`)
+                      : (isLight ? "#ffffff" : t.surface),
+                    border: `1px solid ${isStrong ? (isLight ? "rgba(21, 128, 61, 0.28)" : t.accent + "55") : t.border}`,
                     color: isStrong ? t.accent : t.textSub,
-                    boxShadow: isStrong ? `0 0 12px ${t.accent}12` : "none",
+                    boxShadow: isStrong ? (isLight ? "0 1px 4px rgba(21,128,61,0.08)" : `0 0 12px ${t.accent}12`) : "none",
                     transition: "all 0.25s ease",
                   }}>{name}</span>
                 );
@@ -2564,11 +2596,12 @@ function Experience({ t }) {
 // INITIATIVES & EVENTS
 // ─────────────────────────────────────────────
 function Initiatives({ t }) {
+  const isLight = t.name === "Meadow";
   const currentFocus = [
     {
       title: "Rescue Drone Vision (JIVAN)",
       status: "Active R&D",
-      statusColor: "#f59e0b",
+      statusColor: isLight ? "#b45309" : "#f59e0b",
       Icon: Drone,
       desc: "Optimizing real-time person detection algorithms with ONNX & YOLO for low-latency FPV drone cameras and search-and-rescue operator interfaces.",
       tags: ["Computer Vision", "YOLO", "ONNX", "Disaster Tech"],
@@ -2649,11 +2682,11 @@ function Initiatives({ t }) {
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{
                     width: 32, height: 32, borderRadius: 10,
-                    background: `linear-gradient(135deg, ${t.accent}22, ${t.accentSub}11)`,
-                    border: `1px solid ${t.accent}33`,
+                    background: isLight ? "rgba(21, 128, 61, 0.08)" : `linear-gradient(135deg, ${t.accent}22, ${t.accentSub}11)`,
+                    border: `1px solid ${isLight ? "rgba(21, 128, 61, 0.2)" : t.accent + "33"}`,
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <f.Icon size={15} color={t.accentSub} />
+                    <f.Icon size={15} color={t.accent} />
                   </div>
                   <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{f.title}</div>
                 </div>
@@ -2706,8 +2739,8 @@ function Initiatives({ t }) {
               {ev.link && (
                 <a href={ev.link} target="_blank" rel="noopener noreferrer" className="link-hover" style={{
                   display: "inline-flex", alignItems: "center", gap: 5, padding: "6px 14px", borderRadius: 8,
-                  fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub,
-                  background: t.surface, border: `1px solid ${t.border}`, textDecoration: "none",
+                  fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: isLight ? t.accent : t.accentSub,
+                  background: isLight ? "#ffffff" : t.surface, border: `1px solid ${t.border}`, textDecoration: "none",
                 }}>
                   <ExternalLink size={11} /> Event Page
                 </a>
@@ -2728,9 +2761,10 @@ function Initiatives({ t }) {
         </p>
         <a href="https://riserscre8.com" target="_blank" rel="noopener noreferrer" className="link-hover" style={{
           display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 10,
-          fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: t.accent,
-          background: `linear-gradient(135deg, ${t.accent}15, ${t.accentSub}08)`,
-          border: `1px solid ${t.accent}44`, textDecoration: "none", fontWeight: 600,
+          fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: isLight ? "#ffffff" : t.accent,
+          background: isLight ? t.accent : `linear-gradient(135deg, ${t.accent}15, ${t.accentSub}08)`,
+          border: `1px solid ${isLight ? t.accent : t.accent + "44"}`, textDecoration: "none", fontWeight: 600,
+          boxShadow: isLight ? "0 2px 8px rgba(21, 128, 61, 0.25)" : "none",
         }}>
           <ExternalLink size={13} /> Visit Risers Cre8 Platform
         </a>
@@ -2766,8 +2800,8 @@ function Initiatives({ t }) {
               {ev.link && (
                 <a href={ev.link} target="_blank" rel="noopener noreferrer" className="link-hover" style={{
                   display: "inline-flex", alignItems: "center", gap: 5, padding: "6px 14px", borderRadius: 8,
-                  fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: t.accentSub,
-                  background: t.surface, border: `1px solid ${t.border}`, textDecoration: "none",
+                  fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: isLight ? t.accent : t.accentSub,
+                  background: isLight ? "#ffffff" : t.surface, border: `1px solid ${t.border}`, textDecoration: "none",
                 }}>
                   <ExternalLink size={11} /> Event Page
                 </a>
@@ -2785,6 +2819,7 @@ function Initiatives({ t }) {
 // CERTIFICATIONS
 // ─────────────────────────────────────────────
 function Certifications({ t }) {
+  const isLight = t.name === "Meadow";
   return (
     <div>
       <PageTitle t={t} num="06">Certifications</PageTitle>
@@ -2802,7 +2837,9 @@ function Certifications({ t }) {
                 {c.badge && (
                   <span style={{
                     display: "inline-block", marginTop: 6, fontSize: 9, padding: "2px 9px", borderRadius: 999,
-                    background: `${t.accent}18`, border: `1px solid ${t.accent}44`, color: t.accent,
+                    background: isLight ? "rgba(21, 128, 61, 0.08)" : `${t.accent}18`,
+                    border: `1px solid ${isLight ? "rgba(21, 128, 61, 0.28)" : t.accent + "44"}`,
+                    color: t.accent,
                     fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, letterSpacing: 1,
                   }}>{c.badge}</span>
                 )}
@@ -2818,9 +2855,9 @@ function Certifications({ t }) {
                 )}
                 <a href={c.verify} target="_blank" rel="noopener" style={{
                   display: "flex", alignItems: "center", gap: 4, fontSize: 11,
-                  color: t.accentSub, fontFamily: "'JetBrains Mono', monospace",
+                  color: isLight ? t.accent : t.accentSub, fontFamily: "'JetBrains Mono', monospace",
                   textDecoration: "none", padding: "4px 10px", borderRadius: 8,
-                  border: `1px solid ${t.border}`, background: t.surface,
+                  border: `1px solid ${t.border}`, background: isLight ? "#ffffff" : t.surface,
                   transition: "all 0.2s",
                 }}>
                   <ExternalLink size={10} /> Verify
@@ -2829,11 +2866,11 @@ function Certifications({ t }) {
             </div>
             {c.score !== null && (
               <div style={{ marginTop: 12 }}>
-                <div style={{ height: 5, background: t.border, borderRadius: 4, overflow: "hidden" }}>
+                <div style={{ height: 5, background: isLight ? "rgba(0,0,0,0.06)" : t.border, borderRadius: 4, overflow: "hidden" }}>
                   <div className="progress-fill" style={{
                     width: `${c.score}%`, height: "100%",
-                    background: `linear-gradient(90deg, ${t.accentSub}, ${t.gold})`,
-                    borderRadius: 4, boxShadow: `0 0 10px ${t.accentSub}33`,
+                    background: `linear-gradient(90deg, ${t.accent}, ${t.gold})`,
+                    borderRadius: 4, boxShadow: `0 0 10px ${t.accent}33`,
                   }} />
                 </div>
               </div>
@@ -2854,9 +2891,9 @@ function Certifications({ t }) {
               </div>
               <a href={c.verify} target="_blank" rel="noopener" style={{
                 display: "flex", alignItems: "center", gap: 4, fontSize: 10,
-                color: t.accentSub, fontFamily: "'JetBrains Mono', monospace",
+                color: isLight ? t.accent : t.accentSub, fontFamily: "'JetBrains Mono', monospace",
                 textDecoration: "none", padding: "3px 9px", borderRadius: 7,
-                border: `1px solid ${t.border}`, background: t.surface,
+                border: `1px solid ${t.border}`, background: isLight ? "#ffffff" : t.surface,
                 flexShrink: 0, transition: "all 0.2s",
               }}>
                 <ExternalLink size={9} /> Verify
@@ -2880,6 +2917,7 @@ function Certifications({ t }) {
 // CONTACT
 // ─────────────────────────────────────────────
 function Contact({ t }) {
+  const isLight = t.name === "Meadow";
   const [copied, setCopied] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
@@ -2906,17 +2944,18 @@ function Contact({ t }) {
   };
 
   const inp = {
-    width: "100%", padding: "10px 13px", background: t.surface,
+    width: "100%", padding: "10px 13px",
+    background: isLight ? "#ffffff" : t.surface,
     border: `1px solid ${t.border}`, borderRadius: 9, color: t.text,
     fontSize: 13, fontFamily: "'Outfit', sans-serif", boxSizing: "border-box",
     transition: "border-color .25s, box-shadow .25s",
   };
 
   const avail = [
-    { label: "Available", sub: "For new roles", c: "#22c55e" },
+    { label: "Available", sub: "For new roles", c: isLight ? "#15803d" : "#22c55e" },
     { label: "6 hrs", sub: "Response time", c: t.text },
-    { label: "Remote", sub: "Preferred", c: "#f59e0b" },
-    { label: "Flexible", sub: "Start date", c: "#8b5cf6" },
+    { label: "Remote", sub: "Preferred", c: isLight ? "#b45309" : "#f59e0b" },
+    { label: "Flexible", sub: "Start date", c: isLight ? "#7c3aed" : "#8b5cf6" },
   ];
 
   return (
@@ -2934,7 +2973,7 @@ function Contact({ t }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}>
         {/* Info */}
         <GlassCard t={t}>
-          <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 15, color: t.accentSub, fontSize: 13, fontWeight: 600 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 15, color: t.accent, fontSize: 13, fontWeight: 700 }}>
             <Mail size={14} />Contact Information
           </div>
           {[
@@ -2942,12 +2981,12 @@ function Contact({ t }) {
             { Icon: Phone, val: "+91 9123634756" },
             { Icon: MapPin, val: "Kalyani, West Bengal, India" },
           ].map((row, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", background: t.surface, borderRadius: 9, marginBottom: 7, transition: "background .2s" }}>
+            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", background: isLight ? "#ffffff" : t.surface, border: `1px solid ${t.border}`, borderRadius: 9, marginBottom: 7, transition: "background .2s" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 7, color: t.textSub, fontSize: 12 }}>
-                <row.Icon size={12} color={t.accentSub} />{row.val}
+                <row.Icon size={12} color={t.accent} />{row.val}
               </div>
               {row.action && (
-                <button onClick={row.action} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: copied ? "#22c55e" : t.accentSub, display: "flex", alignItems: "center", gap: 3, transition: "color .2s" }}>
+                <button onClick={row.action} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: copied ? (isLight ? "#15803d" : "#22c55e") : t.accent, display: "flex", alignItems: "center", gap: 3, transition: "color .2s" }}>
                   {copied ? <Check size={11} /> : <Copy size={11} />}{row.actionLabel}
                 </button>
               )}
@@ -2955,13 +2994,13 @@ function Contact({ t }) {
           ))}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 7, marginTop: 10 }}>
             {[{ href: "https://github.com/Gocodein", label: "GitHub", Icon: GitBranch }, { href: "https://www.linkedin.com/in/sagar-shaw-79701138a", label: "LinkedIn", Icon: LinkedinIcon }].map(({ href, label, Icon }) => (
-              <a key={label} href={href} target="_blank" rel="noopener" className="link-hover" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "9px 0", background: t.surface, border: `1px solid ${t.border}`, borderRadius: 9, color: t.textSub, fontSize: 12 }}>
+              <a key={label} href={href} target="_blank" rel="noopener" className="link-hover" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "9px 0", background: isLight ? "#ffffff" : t.surface, border: `1px solid ${t.border}`, borderRadius: 9, color: t.textSub, fontSize: 12 }}>
                 <Icon size={13} />{label}
               </a>
             ))}
           </div>
-          <div style={{ marginTop: 10, padding: "10px 12px", background: "#16a34a11", border: "1px solid #16a34a33", borderRadius: 9, display: "flex", alignItems: "center", gap: 7, fontSize: 12, color: "#22c55e" }}>
-            <span className="pulse-dot" style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
+          <div style={{ marginTop: 10, padding: "10px 12px", background: isLight ? "rgba(21, 128, 61, 0.08)" : "#16a34a11", border: `1px solid ${isLight ? "rgba(21, 128, 61, 0.25)" : "#16a34a33"}`, borderRadius: 9, display: "flex", alignItems: "center", gap: 7, fontSize: 12, color: isLight ? "#15803d" : "#22c55e", fontWeight: 600 }}>
+            <span className="pulse-dot" style={{ width: 7, height: 7, borderRadius: "50%", background: isLight ? "#15803d" : "#22c55e", display: "inline-block" }} />
             Available for new opportunities
           </div>
         </GlassCard>
@@ -3406,15 +3445,15 @@ export default function App() {
 
         {/* Footer */}
         <div style={{ padding: "12px 14px", borderTop: `1px solid ${t.border}` }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#22c55e", marginBottom: 10 }}>
-            <span className="pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: t.name === "Meadow" ? "#15803d" : "#22c55e", fontWeight: 600, marginBottom: 10 }}>
+            <span className="pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: t.name === "Meadow" ? "#15803d" : "#22c55e", display: "inline-block" }} />
             Available for hire
           </div>
           {!isMobile && (
             <button onClick={() => setTheme(th => th === "midnight" ? "matinee" : "midnight")} style={{
               display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
               width: "100%", padding: "8px 0", borderRadius: 8,
-              background: t.card, border: `1px solid ${t.border}`,
+              background: t.name === "Meadow" ? "#ffffff" : t.card, border: `1px solid ${t.border}`,
               color: t.textMuted, fontSize: 11, cursor: "pointer",
               backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
               transition: "all .25s",
@@ -3457,13 +3496,13 @@ export default function App() {
         <div style={{ position: "fixed", bottom: isMobile ? 20 : 28, right: isMobile ? 16 : 36, display: "flex", gap: 8, zIndex: 200 }}>
           <button className="nav-arrow" onClick={goPrev} disabled={curIdx === 0} style={{
             width: 36, height: 36, borderRadius: 10, border: `1px solid ${t.border}`,
-            background: t.card, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+            background: t.name === "Meadow" ? "#ffffff" : t.card, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
             color: curIdx === 0 ? t.dotEmpty : t.textSub, cursor: curIdx === 0 ? "default" : "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}><ChevronLeft size={16} /></button>
           <button className="nav-arrow" onClick={goNext} disabled={curIdx === NAV_IDS.length - 1} style={{
             width: 36, height: 36, borderRadius: 10, border: `1px solid ${t.border}`,
-            background: t.card, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+            background: t.name === "Meadow" ? "#ffffff" : t.card, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
             color: curIdx === NAV_IDS.length - 1 ? t.dotEmpty : t.textSub, cursor: curIdx === NAV_IDS.length - 1 ? "default" : "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}><ChevronRight size={16} /></button>
