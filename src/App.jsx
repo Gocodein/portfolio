@@ -504,47 +504,51 @@ const PROJECTS_DATA = [
     title: "Merchant AI Readability & Autonomous Commerce",
     badge: "Razorpay Buildathon · FastMCP", badgeColor: "#c9a646",
     role: "AI Architect & Lead Engineer", period: "Sep 2026",
-    description: "Architected an Agentic FastMCP Commerce Gateway connecting autonomous LLMs to D2C merchant inventories via ChromaDB hybrid vector search (0.010ms lookup); enforced 0% transaction tampering through HMAC cryptographic signatures and validated end-to-end checkout with 17/17 automated pytest suites.",
-    techStack: ["Python", "FastMCP", "Razorpay API", "ChromaDB", "Anthropic API", "Gemini API", "Vector Search", "FastAPI", "Pytest"],
+    description: "Architected an Agentic FastMCP Commerce Gateway connecting autonomous LLMs to D2C merchant inventories via ChromaDB semantic vector search (sub-10ms lookup); enforced deterministic financial safety through an NPCI UAP ₹2,000 session spending cap with human consent gates and an immutable SQLite WAL audit ledger, validated end-to-end with 17/17 automated pytest suites.",
+    techStack: ["Python", "FastMCP (MCP SDK)", "Razorpay API", "ChromaDB", "Anthropic Claude 3.5", "Gemini 3.5 Flash", "sentence-transformers", "Pydantic v2", "SQLite WAL", "Streamlit", "Pytest"],
     category: ['All', 'Agentic AI & FastMCP', 'Full-Stack Web', 'ML-DL', 'Web-App'],
     architecture: {
-      summary: "End-to-end FastMCP model context protocol gateway exposing merchant product catalogs as structured vector tools. LLMs autonomously reason over catalog entities and trigger idempotent, cryptographically signed Razorpay transactions.",
-      flowAscii: `[SMB / D2C Catalog]
+      summary: "7-tool FastMCP model context protocol gateway exposing merchant product catalogs as structured vector tools with deterministic NPCI UAP financial boundary. LLMs autonomously discover, inspect, and transact via Razorpay UPI rails backed by an immutable SQLite WAL audit ledger.",
+      flowAscii: `[SMB / D2C Catalog (CSV/JSON)]
        │
        ▼
-[FastMCP Gateway Server]
-       │  (Hybrid Vector Embeddings & Sub-ms Inverted Index)
+[Vernacular LLM Enricher (Gemini 3.5 Flash)]
+       │  (Hinglish Intents, Aliases, Attributes)
        ▼
-[ChromaDB Vector Retrieval (0.010ms)]
-       │  (Tool Call Payloads: search_catalog, create_order)
+[ChromaDB Vector Store (all-MiniLM-L6-v2)]
+       │  (7 FastMCP Tools: search, inspect, order, cancel)
        ▼
-[Claude 3.5 Sonnet / Gemini 2.5 Pro]
-       │  (Structured JSON Arguments & Intent Parsing)
+[Claude 3.5 Sonnet / Gemini 3.5 Flash]
+       │  (Autonomous Reasoning & Tool Invocation)
        ▼
-[Cryptographic HMAC Integrity Guard]
-       │  (0% Price Tampering & Signature Verification)
+[NPCI UAP Spending Gate (₹2,000 Cap + Human Consent)]
+       │  (Deterministic Pre-flight Budget Check)
        ▼
-[Razorpay Orders API & Autonomous Checkout]`,
+[Razorpay Orders API + UPI Payment Links & QR]
+       │
+       ▼
+[Immutable SQLite WAL Audit Ledger]`,
       pipeline: [
-        { step: "01", name: "Catalog Ingestion", tech: "FastMCP Schema", detail: "Normalizes raw merchant inventory into agent-readable semantic schemas." },
-        { step: "02", name: "Hybrid Search", tech: "ChromaDB + BM25", detail: "Combines dense vector retrieval with keyword fallback in 0.010ms latency." },
-        { step: "03", name: "Agentic Reasoning", tech: "Anthropic & Gemini", detail: "Multi-model tool invocation for autonomous item discovery and cart generation." },
-        { step: "04", name: "Security Verification", tech: "HMAC-SHA256 Guard", detail: "Cryptographic validation preventing parameter and price tampering in flight." },
-        { step: "05", name: "Order Execution", tech: "Razorpay Orders API", detail: "Idempotent payment order creation with automated webhook callback validation." },
+        { step: "01", name: "Catalog Ingestion", tech: "FastMCP + Pydantic v2", detail: "Normalizes raw merchant CSV/JSON into agent-readable semantic schemas with vernacular LLM enrichment." },
+        { step: "02", name: "Vector Search", tech: "ChromaDB + MiniLM-L6", detail: "Cosine similarity retrieval with in-memory fallback search (sub-10ms, zero-downtime)." },
+        { step: "03", name: "Agentic Reasoning", tech: "Gemini 3.5 & Claude 3.5", detail: "Multi-model tool invocation for autonomous Hinglish intent resolution and cart generation." },
+        { step: "04", name: "Financial Safety Gate", tech: "NPCI UAP Simulation", detail: "₹2,000 session spending cap with pre-flight budget check and explicit human confirmation." },
+        { step: "05", name: "Payment & Audit", tech: "Razorpay + SQLite WAL", detail: "UPI payment link/QR creation with immutable audit trail logging every tool invocation." },
       ],
     },
     metrics: [
-      { label: "Retrieval Latency", value: "0.010ms", desc: "Sub-ms hybrid keyword & vector lookup" },
-      { label: "Pytest Coverage", value: "17/17 Pass", desc: "100% automated test suite pass rate" },
-      { label: "Tampering Vulnerability", value: "0%", desc: "Cryptographic HMAC payment verification" },
-      { label: "Schema Interoperability", value: "100%", desc: "Full FastMCP tool specification compliance" },
+      { label: "Retrieval Latency", value: "Sub-10ms", desc: "ChromaDB cosine similarity with fallback search" },
+      { label: "Pytest Coverage", value: "17/17 Pass", desc: "100% automated integration test pass rate" },
+      { label: "Spending Boundary", value: "₹2,000 Cap", desc: "Deterministic NPCI UAP session spending limit" },
+      { label: "MCP Tools", value: "7 Tools", desc: "Full FastMCP protocol specification compliance" },
     ],
     features: [
-      "FastMCP & Razorpay integration transforming unstructured D2C and SMB Indian merchant catalogs into 100% agent-readable APIs",
-      "Hybrid search engine combining ChromaDB vector embeddings with sub-millisecond keyword fallback (0.010ms lookup)",
-      "Cryptographic Payment Integrity Guard preventing price manipulation and parameter tampering during agentic checkout",
-      "Built for Razorpay AI Buildathon with 100% test suite pass rate (17/17 pytest suites passing)",
-      "Multi-agent support with structured tool schemas verified across Anthropic Claude 3.5 and Gemini 2.5 Flash/Pro models",
+      "7-tool FastMCP server transforming unstructured D2C Indian merchant catalogs into 100% agent-readable APIs with Hinglish vernacular intent resolution",
+      "ChromaDB vector search with all-MiniLM-L6-v2 embeddings (384-dim, sub-10ms) and zero-downtime in-memory fallback for guaranteed availability",
+      "Deterministic NPCI UAP financial safety boundary — ₹2,000 session spending cap with explicit human consent gates preventing autonomous overspending",
+      "Graceful out-of-stock failure recovery with semantic alternative recommendations and capture-aware order cancellation guard",
+      "Immutable SQLite WAL audit ledger capturing 100% of tool invocations, financial deltas, and parameter hashes for regulatory auditability",
+      "Multi-agent support verified across Anthropic Claude 3.5 Sonnet and Google Gemini 3.5 Flash with automatic LLM fallback cascade",
     ],
     github: 'https://github.com/Gocodein/merchant-ai-readability',
     demo: null,
@@ -1051,7 +1055,7 @@ function RecruiterPitchModal({ isOpen, onClose, t }) {
               </span>
             </div>
             <p style={{ fontSize: 12, color: t.textSub, lineHeight: 1.6, margin: 0, fontFamily: "'Outfit', sans-serif" }}>
-              Engineered the <strong>FastMCP merchant gateway</strong> turning SMB Indian catalogs into semantic tool APIs. Integrated ChromaDB hybrid vector retrieval (<strong>0.010ms lookup</strong>), HMAC cryptographic payment guards, and Claude 3.5 & Gemini 2.5 tool calling with <strong>100% test pass rate (17/17 pytest suites)</strong>.
+              Engineered the <strong>7-tool FastMCP merchant gateway</strong> turning Indian D2C catalogs into semantic vector APIs with Hinglish intent resolution. ChromaDB retrieval (<strong>sub-10ms</strong>), deterministic <strong>NPCI UAP ₹2,000 spending cap</strong> with human consent gates, immutable SQLite WAL audit trail, and Claude 3.5 &amp; Gemini 3.5 Flash tool calling with <strong>17/17 pytest pass rate</strong>.
             </p>
           </div>
 
@@ -1237,7 +1241,7 @@ function CommandPalette({
       id: "proj-merchant",
       category: "Case Studies",
       title: "Merchant AI Readability & Autonomous Commerce",
-      desc: "FastMCP server, ChromaDB vector search (0.010ms), Anthropic & Gemini API",
+      desc: "7-tool FastMCP server, ChromaDB vector search (sub-10ms), NPCI UAP spending gate, Claude 3.5 & Gemini 3.5",
       icon: Terminal,
       action: () => {
         navigate("projects");
