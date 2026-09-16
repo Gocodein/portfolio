@@ -43,3 +43,12 @@ desktop.ini
 /theme
 /brutalist-void-portfolio-template.zip
 /image-to-particles.zip
+
+# Scratch & temporary user files
+*.docx
+~$*
+/test.*
+/passport_photo.jpg
+/resume_page_*.png
+/Sagar_Shaw_Resume.docx
+/Sagar_Shaw_Resume.pdf
