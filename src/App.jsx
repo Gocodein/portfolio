@@ -597,7 +597,7 @@ const PROJECTS_DATA = [
       "Interactive 6-page Streamlit research dashboard with real-time species analytics, spatial heatmaps, & kinematic behavior tracking",
       "Seamless IoT hardware integration (Arduino Mega + Raspberry Pi 4) with sub-250ms video latency and 18-DOF servo coordination",
     ],
-    github: 'https://github.com/Gocodein/spidy.git',
+    github: 'https://github.com/Gocodein/spidy',
     demo: 'https://6gtwjs9csfbmyt957xc3nv.streamlit.app/',
   },
   {
@@ -1924,7 +1924,7 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
               <Award size={12} /> 2 Govt. Patents
             </span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "3px 9px", borderRadius: 999, background: `${t.accent}15`, color: t.accent, border: `1px solid ${t.accent}33`, fontFamily: "'JetBrains Mono', monospace" }}>
-              <Activity size={12} /> 0.010ms Search
+              <Activity size={12} /> Sub-10ms Search
             </span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "3px 9px", borderRadius: 999, background: `${t.accent}15`, color: t.accent, border: `1px solid ${t.accent}33`, fontFamily: "'JetBrains Mono', monospace" }}>
               <ShieldCheck size={12} /> 17/17 Pytests Pass
