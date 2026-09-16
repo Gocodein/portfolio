@@ -801,7 +801,7 @@ const CERTS_SCORED = [
 
 // Quick course completions (chip/tag layout — no score)
 const CERTS_COURSES = [
-  { name: "Machine Learning with Python", org: "IBM ", verify: "https://drive.google.com/file/d/1EfBRGrMfajqCaYVWtkXOr6DqS7H-syBv/view?usp=sharing" },
+  { name: "Machine Learning with Python", org: "IBM", verify: "https://drive.google.com/file/d/1EfBRGrMfajqCaYVWtkXOr6DqS7H-syBv/view?usp=sharing" },
   { name: "Intermediate Machine Learning", org: "Kaggle", verify: "https://drive.google.com/file/d/1mQ3gHFaULPRz9MbnKlHpeBHhbJRpjaXB/view?usp=sharing" },
   { name: "DBMS – Master the Fundamentals & Advanced Topics", org: "Scaler", verify: "https://drive.google.com/file/d/1MOWPD_XRDOGUFiJ6-b79kAJHLpI8twgD/view?usp=sharing" },
   { name: "Intermediate SQL", org: "Sololearn", verify: "https://drive.google.com/file/d/1WwmCJJ6ASE9BnXVR55CgufRiRUTa0yid/view?usp=sharing" },
@@ -1103,7 +1103,7 @@ function RecruiterPitchModal({ isOpen, onClose, t }) {
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11.5, color: t.text, fontWeight: 600 }}>
             <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
-            <span>Open for SDE / AI / ML Full-Time Roles (2026)</span>
+            <span>Open for SDE / AI / ML Full-Time Roles (2027)</span>
           </div>
           <span style={{ fontSize: 11, color: t.accentSub, fontFamily: "'JetBrains Mono', monospace" }}>
             Remote & On-Site / Relocation Ready
@@ -1304,6 +1304,14 @@ function CommandPalette({
       desc: "Executive bio, 3D tilt card, core stats",
       icon: Globe,
       action: () => { navigate("overview"); onClose(); },
+    },
+    {
+      id: "nav-about",
+      category: "Navigation",
+      title: "Go to About Me",
+      desc: "Background, education, patents & leadership",
+      icon: User,
+      action: () => { navigate("about"); onClose(); },
     },
     {
       id: "nav-projects",
@@ -1622,7 +1630,7 @@ function PatentsSpotlight({ t }) {
           fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: t.gold, fontWeight: 700,
           padding: "4px 10px", borderRadius: 8, background: `${t.gold}15`, border: `1px solid ${t.gold}33`,
         }}>
-          2 Official Grants
+          1 Grant · 1 Published
         </span>
       </div>
 
@@ -1723,7 +1731,7 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
     { val: cgpa, label: "CGPA", sub: `Best SGPA: ${Math.max(...SGPA_DATA.map(d => d.sgpa))}` },
     { val: "2", label: "Patents", sub: "Reg. 467786-001 & 202531071175 A" },
     { val: "1", label: "Internships", sub: "AI/ML focused" },
-    { val: "7", label: "Certifications", sub: "NPTEL, SAP, IBM & more" },
+    { val: "8", label: "Certifications", sub: "NPTEL, SAP, IBM & more" },
   ];
   const cardRef = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -1861,14 +1869,14 @@ function Overview({ t, setPitchOpen, setPaletteOpen }) {
                 { href: "https://www.linkedin.com/in/sagar-shaw-79701138a", label: "LinkedIn", Icon: LinkedinIcon },
                 { href: "https://github.com/Gocodein", label: "GitHub", Icon: GitBranch },
               ].map(({ href, label, Icon }) => (
-                <a key={label} href={href} target="_blank" rel="noopener" className="link-hover" style={{
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="link-hover" style={{
                   display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
                   background: t.surface, border: `1px solid ${t.border}`, borderRadius: 10,
                   color: t.textSub, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
                   backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
                 }}><Icon size={13} />{label}</a>
               ))}
-              <a href="/resume.pdf" target="_blank" rel="noopener" className="link-hover" style={{
+              <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="link-hover" style={{
                 display: "flex", alignItems: "center", gap: 6, padding: "8px 16px",
                 background: t.surface, border: `1px solid ${t.border}`, borderRadius: 10,
                 color: t.textSub, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
@@ -2767,7 +2775,7 @@ function Initiatives({ t }) {
           <div style={{ fontSize: 14, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>Risers Cre8 — Core Team & Organization</div>
         </div>
         <p style={{ color: t.textSub, fontSize: 13, lineHeight: 1.8, marginBottom: 14, fontFamily: "'Outfit', sans-serif" }}>
-          As a  Core Team Member at <strong>Risers Cre8</strong>, I collaborate with fellow engineers to build open-source robotics, hardware development boards, IoT sensor modules, and planing to host regional hackathons. We aim to empower student innovators by bridging academic theory with real-world prototyping.
+          As a Core Team Member at <strong>Risers Cre8</strong>, I collaborate with fellow engineers to build open-source robotics, hardware development boards, IoT sensor modules, and planning to host regional hackathons. We aim to empower student innovators by bridging academic theory with real-world prototyping.
         </p>
         <a href="https://riserscre8.com" target="_blank" rel="noopener noreferrer" className="link-hover" style={{
           display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 10,
@@ -2863,7 +2871,7 @@ function Certifications({ t }) {
                     backgroundClip: "text", fontFamily: "'Outfit', sans-serif",
                   }}>{c.score}<span style={{ fontSize: "0.9rem" }}>%</span></div>
                 )}
-                <a href={c.verify} target="_blank" rel="noopener" style={{
+                <a href={c.verify} target="_blank" rel="noopener noreferrer" style={{
                   display: "flex", alignItems: "center", gap: 4, fontSize: 11,
                   color: isLight ? t.accent : t.accentSub, fontFamily: "'JetBrains Mono', monospace",
                   textDecoration: "none", padding: "4px 10px", borderRadius: 8,
@@ -2899,7 +2907,7 @@ function Certifications({ t }) {
                 <span style={{ fontSize: 13, fontWeight: 600, color: t.text, fontFamily: "'Outfit', sans-serif" }}>{c.name}</span>
                 <span style={{ fontSize: 11, color: t.textMuted, marginLeft: 8 }}>{c.org}</span>
               </div>
-              <a href={c.verify} target="_blank" rel="noopener" style={{
+              <a href={c.verify} target="_blank" rel="noopener noreferrer" style={{
                 display: "flex", alignItems: "center", gap: 4, fontSize: 10,
                 color: isLight ? t.accent : t.accentSub, fontFamily: "'JetBrains Mono', monospace",
                 textDecoration: "none", padding: "3px 9px", borderRadius: 7,
@@ -3004,7 +3012,7 @@ function Contact({ t }) {
           ))}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 7, marginTop: 10 }}>
             {[{ href: "https://github.com/Gocodein", label: "GitHub", Icon: GitBranch }, { href: "https://www.linkedin.com/in/sagar-shaw-79701138a", label: "LinkedIn", Icon: LinkedinIcon }].map(({ href, label, Icon }) => (
-              <a key={label} href={href} target="_blank" rel="noopener" className="link-hover" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "9px 0", background: isLight ? "#ffffff" : t.surface, border: `1px solid ${t.border}`, borderRadius: 9, color: t.textSub, fontSize: 12 }}>
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="link-hover" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "9px 0", background: isLight ? "#ffffff" : t.surface, border: `1px solid ${t.border}`, borderRadius: 9, color: t.textSub, fontSize: 12 }}>
                 <Icon size={13} />{label}
               </a>
             ))}
