@@ -502,6 +502,7 @@ const SKILLS_DATA = [
 const PROJECTS_DATA = [
   {
     title: "Merchant AI Readability & Autonomous Commerce",
+    tagline: "FastMCP gateway connecting LLMs to D2C catalogs with sub-10ms vector search & ₹2,000 UAP spending cap",
     badge: "Razorpay Buildathon · FastMCP", badgeColor: "#c9a646",
     role: "AI Architect & Lead Engineer", period: "Sep 2026",
     description: "Architected an Agentic FastMCP Commerce Gateway connecting autonomous LLMs to D2C merchant inventories via ChromaDB semantic vector search (sub-10ms lookup); enforced deterministic financial safety through an NPCI UAP ₹2,000 session spending cap with human consent gates and an immutable SQLite WAL audit ledger, validated end-to-end with 17/17 automated pytest suites.",
@@ -555,6 +556,7 @@ const PROJECTS_DATA = [
   },
   {
     title: "Arachnid — Bio-Inspired Spider",
+    tagline: "Patented bio-inspired hexapod robot with edge YOLOv8 vision tracking 9 endangered species at <250ms latency",
     badge: "2 Patents · Live App", badgeColor: "#c9a646",
     role: "AI Developer & Hardware Support Engineer", period: "Aug 2025 — Present",
     patentNo: "Design Reg. 467786-001 | App. 202531071175 A",
@@ -602,6 +604,7 @@ const PROJECTS_DATA = [
   },
   {
     title: "IntelliEat Monitoring System",
+    tagline: "IoT smart plate & utensil sensors with scikit-learn ML tracking eating behaviors to detect disorder patterns",
     badge: "In Progress", badgeColor: "#3b82f6",
     role: "Team Lead", period: "Aug 2024 — Present",
     description: "IoT-enabled solution tracking eating behaviors via smart plates and utensils to detect patterns linked to eating disorders.",
@@ -646,6 +649,7 @@ const PROJECTS_DATA = [
   },
   {
     title: 'JIVAN — Rescue Drone AI',
+    tagline: 'Edge aerial triage AI running 1.4 FPS in-browser client ONNX models for disaster zone search & rescue',
     badge: 'Active R&D', badgeColor: '#f59e0b',
     role: 'AI Developer & Architect', period: 'Jul 2026 — Present',
     description: 'Developed an edge aerial triage AI fusing live RGB and thermal FPV drone video to detect victims in disaster zones; deployed quantized YOLO models inside the client browser via WebAssembly ONNX Runtime, eliminating cloud dependency during telecom blackouts.',
@@ -690,6 +694,7 @@ const PROJECTS_DATA = [
   },
   {
     title: "AI Engineer OS — Personal Productivity PWA",
+    tagline: "Next.js 16 & Supabase PWA for tracking technical skill acquisition, deep work sprints & habit streaks",
     badge: "Live App · Production", badgeColor: "#22c55e",
     role: "Full-Stack Developer & Architect", period: "June 2026 — Present",
     description: "Engineered a production-ready Progressive Web App (PWA) on Next.js 16 App Router and React 19 for developer sprint management; achieved 100% Google Lighthouse ratings by configuring PgBouncer connection-pooled Supabase queries and service-worker offline state synchronization.",
@@ -734,6 +739,7 @@ const PROJECTS_DATA = [
   },
   {
     title: 'AI Portfolio — Interactive Glass UI',
+    tagline: 'High-performance React portfolio with dual themes, 3D tilt card, interactive particles & Recruiter Cockpit',
     badge: 'Live App', badgeColor: '#22c55e',
     role: 'Full-Stack Developer', period: '2026 — Present',
     description: 'A modern glass-morphism portfolio built with React, featuring particle animations, 3D tilt cards, swipe navigation, Recruiter Cockpit (Cmd+K), and dual themes.',
@@ -2231,13 +2237,14 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
             <div key={p.title} className="card-hover glass-card" style={{
               background: isLight ? (isOpen ? "#ffffff" : "rgba(255, 255, 255, 0.88)") : t.card,
               border: `1px solid ${isOpen ? (isLight ? t.accent : t.accentSub) : t.border}`,
-              borderRadius: 18, overflow: "hidden", transition: "border-color .3s, box-shadow .3s",
+              borderRadius: 16, overflow: "hidden", transition: "all .3s ease",
+              borderLeft: isOpen ? `3px solid ${t.accent}` : `1px solid ${t.border}`,
               backdropFilter: "blur(24px) saturate(1.4)", WebkitBackdropFilter: "blur(24px) saturate(1.4)",
               boxShadow: isOpen
                 ? (isLight ? "0 8px 30px rgba(22,101,52,0.08), 0 2px 8px rgba(0,0,0,0.04)" : `inset 0 1px 0 0 ${t.glassHighlight}, 0 0 28px ${t.accent}22, 0 8px 32px rgba(0,0,0,0.15)`)
                 : (isLight ? "0 4px 16px rgba(22,101,52,0.04)" : `inset 0 1px 0 0 ${t.glassHighlight}, 0 4px 20px rgba(0,0,0,0.08)`),
             }}>
-              {/* Header Bar */}
+              {/* Sleek 1-2 Line Collapsed Box Header */}
               <button
                 onClick={() => {
                   const nextOpen = isOpen ? -1 : i;
@@ -2245,74 +2252,136 @@ function Projects({ t, activeProjectIdx, setActiveProjectIdx }) {
                   if (setActiveProjectIdx) setActiveProjectIdx(nextOpen);
                 }}
                 style={{
-                  width: "100%", padding: "16px 18px", display: "flex", alignItems: "center", gap: 12,
+                  width: "100%", padding: "12px 16px", display: "flex", alignItems: "center", gap: 12,
                   background: "none", border: "none", cursor: "pointer", textAlign: "left",
                 }}
               >
+                {/* Chevron icon indicator */}
                 <div style={{
-                  width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                  width: 32, height: 32, borderRadius: 9, flexShrink: 0,
                   background: isOpen ? `linear-gradient(135deg, ${t.accent}, ${t.accentSub})` : t.surface,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  transition: "background .3s, box-shadow .3s",
+                  transition: "all .3s ease",
                   boxShadow: isOpen ? `0 0 14px ${t.accent}33` : "none",
+                  border: `1px solid ${isOpen ? "transparent" : t.border}`,
                 }}>
                   {isOpen ? <ChevronDown size={15} color="#fff" /> : <ChevronRight size={15} color={t.textMuted} />}
                 </div>
 
+                {/* Main 2-line Content Box */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                    <span style={{ fontSize: 14.5, fontWeight: 700, color: t.text, fontFamily: "'Outfit', sans-serif" }}>
-                      {p.title}
-                    </span>
-                    {p.patentNo && (
-                      <span style={{
-                        fontSize: 10, padding: "2px 7px", borderRadius: 6,
-                        background: `${t.gold}18`, color: t.gold, border: `1px solid ${t.gold}44`,
-                        fontFamily: "'JetBrains Mono', monospace", fontWeight: 600,
-                      }}>
-                        Govt. Patents Granted
-                      </span>
-                    )}
-                  </div>
+                  {/* Line 1: Title + Patent Badge (Left) & Category Badge (Right) */}
                   <div style={{
-                    fontSize: 12, color: t.textMuted, marginTop: 4, lineHeight: 1.5,
-                    whiteSpace: "normal", wordBreak: "break-word",
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    gap: 8,
                   }}>
-                    {p.description}
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0, flex: 1 }}>
+                      <span style={{
+                        fontSize: 14, fontWeight: 700, color: isOpen ? t.accent : t.text,
+                        fontFamily: "'Outfit', sans-serif",
+                        whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                      }}>
+                        {p.title}
+                      </span>
+                      {p.patentNo && (
+                        <span style={{
+                          fontSize: 9, padding: "1px 6px", borderRadius: 5,
+                          background: `${t.gold}18`, color: t.gold, border: `1px solid ${t.gold}44`,
+                          fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, flexShrink: 0,
+                        }}>
+                          Patented
+                        </span>
+                      )}
+                    </div>
+
+                    <span style={{
+                      padding: "3px 9px", borderRadius: 999, fontSize: 10.5, fontWeight: 600, flexShrink: 0,
+                      background: isLight && p.badgeColor === "#c9a646" ? `${t.gold}18` : `${p.badgeColor}18`,
+                      color: isLight && p.badgeColor === "#c9a646" ? t.gold : p.badgeColor,
+                      border: `1px solid ${isLight && p.badgeColor === "#c9a646" ? t.gold : p.badgeColor}44`,
+                      fontFamily: "'JetBrains Mono', monospace",
+                      whiteSpace: "nowrap",
+                    }}>
+                      {p.badge}
+                    </span>
+                  </div>
+
+                  {/* Line 2: Single-line Elevator Pitch */}
+                  <div style={{
+                    fontSize: 12, color: t.textSub, marginTop: 3, lineHeight: 1.4,
+                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                    fontFamily: "'Outfit', sans-serif",
+                  }}>
+                    {p.tagline || p.description}
                   </div>
                 </div>
-
-                <span style={{
-                  padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 600, flexShrink: 0,
-                  background: isLight && p.badgeColor === "#c9a646" ? `${t.gold}18` : `${p.badgeColor}18`,
-                  color: isLight && p.badgeColor === "#c9a646" ? t.gold : p.badgeColor,
-                  border: `1px solid ${isLight && p.badgeColor === "#c9a646" ? t.gold : p.badgeColor}44`,
-                  fontFamily: "'JetBrains Mono', monospace",
-                }}>
-                  {p.badge}
-                </span>
               </button>
 
               {/* Expanded Case Study Content */}
               {isOpen && (
-                <div style={{ padding: "0 18px 20px" }} className="fade-in">
-                  {/* Meta Strip */}
+                <div style={{ padding: "4px 16px 20px" }} className="fade-in">
+                  {/* Executive Brief Box */}
                   <div style={{
-                    display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 14,
-                    fontSize: 11, color: t.textMuted, fontFamily: "'JetBrains Mono', monospace",
-                    borderBottom: `1px solid ${t.border}`, paddingBottom: 10,
+                    padding: "14px 16px",
+                    borderRadius: 13,
+                    background: isLight ? "rgba(22, 101, 52, 0.04)" : "rgba(255, 255, 255, 0.02)",
+                    border: `1px solid ${t.border}`,
+                    borderLeft: `3px solid ${t.accent}`,
+                    marginBottom: 16,
                   }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <Briefcase size={12} color={t.accentSub} /> {p.role}
-                    </span>
-                    <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <Calendar size={12} /> {p.period}
-                    </span>
-                    {p.patentNo && (
-                      <span style={{ display: "flex", alignItems: "center", gap: 4, color: t.gold }}>
-                        <Award size={12} /> {p.patentNo}
-                      </span>
-                    )}
+                    <div style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                      flexWrap: "wrap", gap: 8, marginBottom: 8,
+                    }}>
+                      <div style={{
+                        display: "flex", alignItems: "center", gap: 6, fontSize: 11,
+                        color: t.accent, fontFamily: "'JetBrains Mono', monospace",
+                        fontWeight: 700, textTransform: "uppercase", letterSpacing: 1,
+                      }}>
+                        <Terminal size={13} /> Executive Project Brief
+                      </div>
+                      <div style={{
+                        display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
+                        fontSize: 11, color: t.textMuted, fontFamily: "'JetBrains Mono', monospace",
+                      }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                          <Briefcase size={12} color={t.accentSub} /> {p.role}
+                        </span>
+                        <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                          <Calendar size={12} /> {p.period}
+                        </span>
+                        {p.patentNo && (
+                          <span style={{ display: "flex", alignItems: "center", gap: 4, color: t.gold, fontWeight: 600 }}>
+                            <Award size={12} /> {p.patentNo}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <p style={{
+                      fontSize: 13, color: t.text, lineHeight: 1.75, margin: 0,
+                      fontFamily: "'Outfit', sans-serif",
+                    }}>
+                      {p.description}
+                    </p>
+
+                    {/* Tech Stack Pills in Brief */}
+                    <div style={{
+                      display: "flex", flexWrap: "wrap", gap: 6,
+                      marginTop: 12, paddingTop: 10, borderTop: `1px solid ${t.border}`,
+                    }}>
+                      {p.techStack.map(tech => (
+                        <span key={tech} style={{
+                          fontSize: 10.5, padding: "2px 8px", borderRadius: 6,
+                          background: isLight ? "rgba(21, 128, 61, 0.07)" : `${t.accent}14`,
+                          color: isLight ? "#15803d" : t.accent,
+                          border: `1px solid ${isLight ? "rgba(21, 128, 61, 0.2)" : `${t.accent}33`}`,
+                          fontFamily: "'JetBrains Mono', monospace", fontWeight: 500,
+                        }}>
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Sub-tab Navigation */}
